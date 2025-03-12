@@ -1,9 +1,11 @@
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { Routes } from '@angular/router';
 import { menuNames } from '../util/menuNames';
+import { UserFormComponent } from './components/user-form/user-form.component';
 
 export const routes: Routes = [
   {
-    path: menuNames.login.path,
+    path: '',
     redirectTo: menuNames.login.path,
     pathMatch: 'full',
   },
@@ -23,4 +25,10 @@ export const routes: Routes = [
         (module) => module.RegisterComponent
       ),
   },
+  {
+    path: "tab",
+    title: "Tab",
+    component: UserFormComponent
+  }
+
 ];
