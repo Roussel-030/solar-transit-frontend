@@ -1,7 +1,8 @@
-import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { Routes } from '@angular/router';
 import { menuNames } from '../util/menuNames';
 import { UserFormComponent } from './components/user-form/user-form.component';
+import { CategoryListComponent } from './components/category-list/category-list.component';
+import { CategoryFormComponent } from './components/category-form/category-form.component';
 
 export const routes: Routes = [
   {
@@ -26,9 +27,8 @@ export const routes: Routes = [
       ),
   },
   {
-    path: "tab",
-    title: "Tab",
-    component: UserFormComponent
-  }
-
+    path: 'tab',
+    title: 'Tab',
+    component: CategoryListComponent
+  },
 ];
