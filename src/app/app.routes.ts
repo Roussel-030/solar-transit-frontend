@@ -4,7 +4,6 @@ import { HomeComponent } from "./pages/home/home.component";
 import { AuthGuard } from "./services/guard/auth.guard";
 import { UserProfileComponent } from "./components/user-profile/user-profile.component";
 import { ListingListComponent } from "./components/listing-list/listing-list.component";
-import { CategoryListComponent } from "./components/category-list/category-list.component";
 
 export const routes: Routes = [
   {
@@ -35,6 +34,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: "",
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import("./routes/category.route").then((module) => module.categoryRoutes),
+  },
+  {
     path: menuNames.user.path,
     title: menuNames.user.name,
     component: UserProfileComponent,
@@ -44,12 +49,6 @@ export const routes: Routes = [
     path: menuNames.listing.path,
     title: menuNames.listing.name,
     component: ListingListComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: menuNames.category.path,
-    title: menuNames.category.name,
-    component: CategoryListComponent,
     canActivate: [AuthGuard],
   },
 ];

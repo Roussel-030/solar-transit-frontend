@@ -8,7 +8,7 @@ import { environment } from "../../../environments/environment";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class CategoryService {
   private http = inject(HttpClient);
@@ -54,6 +54,15 @@ export class CategoryService {
       tap((response) => this.log(response)),
       catchError((error) => this.handleError(error, null))
     );
+  }
+
+  getByIdCategory(categoryId: number): Observable<CategoryRequest> {
+    return this.http
+      .get<CategoryRequest>(`${this.apiUrlCategory}/${categoryId}`)
+      .pipe(
+        tap((response) => this.log(response)),
+        catchError((error) => this.handleError(error, null))
+      );
   }
 
   private log(response: any) {
