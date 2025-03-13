@@ -10,7 +10,7 @@ import { TokenService } from "../token/token.service";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class AuthenticationService {
   constructor(private tokenService: TokenService) {}
@@ -36,11 +36,14 @@ export class AuthenticationService {
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
+    let body = new URLSearchParams();
+    body.set("username", request.username);
+    body.set("password", request.password);
     return this.http
       .post<RegisterResponse>(
         this.apiUrlLogin,
-        request,
-        this.httpOption.getHttpOptions()
+        body.toString(),
+        this.httpOption.getHttpLoginOptions()
       )
       .pipe(
         tap((response) => {
