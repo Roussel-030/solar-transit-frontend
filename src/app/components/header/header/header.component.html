@@ -49,10 +49,16 @@
       <ul
         class="flex flex-col items-center space-y-2 md:ml-auto md:flex-row md:space-y-0"
       >
-        <li class="font-bold md:mr-12" *ngIf="isAdmin"><a href="#">Users</a></li>
-        <li class="md:mr-12"><a href="#">Listings</a></li>
-        <li class="md:mr-12"><a href="#" *ngIf="isAdmin">Category</a></li>
-        <li class="md:mr-12"><a href="#">Map</a></li>
+        <li class="font-bold md:mr-12" *ngIf="isAdmin">
+          <a [routerLink]="menus.user.path">Users</a>
+        </li>
+        <li class="md:mr-12">
+          <a [routerLink]="menus.listing.path">Listings</a>
+        </li>
+        <li class="md:mr-12">
+          <a [routerLink]="menus.category.path" *ngIf="isAdmin">Category</a>
+        </li>
+        <li class="md:mr-12"><a [routerLink]="menus.user.path">Map</a></li>
         <li class="md:mr-12">
           <button
             class="rounded-full border-2 border-cyan-500 px-6 py-1 text-cyan-600 transition-colors hover:bg-cyan-500 hover:text-white"

@@ -9,7 +9,7 @@ export class TokenService {
   }
 
   get_token() {
-    return localStorage.getItem("token") as string;
+    return localStorage.getItem("token") as string; 
   }
 
   remove_token() {

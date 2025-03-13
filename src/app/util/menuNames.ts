@@ -1,14 +1,30 @@
 export const menuNames = {
   login: {
     name: "Login",
-    path: "login"
+    path: "login",
   },
   register: {
     name: "Register",
-    path: "register"
+    path: "register",
   },
   home: {
     name: "Home",
-    path: "home"
-  }
+    path: "home",
+  },
+  user: {
+    name: "Users",
+    path: "user",
+  },
+  listing: {
+    name: "Listings",
+    path: "listing",
+  },
+  category: {
+    name: "Category",
+    path: "category",
+  },
+  map: {
+    name: "Map",
+    path: "map",
+  },
 };
