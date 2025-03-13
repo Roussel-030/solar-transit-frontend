@@ -24,7 +24,7 @@ export class RegisterComponent {
   onSubmitRegister() {
     this.authenticationService.register(this.registerRequest).subscribe({
       next: () => {
-        this.router.navigate([""]);
+        this.goToLogin();
       },
       error: (err) => {
         console.error(err);
