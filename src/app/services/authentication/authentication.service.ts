@@ -58,6 +58,14 @@ export class AuthenticationService {
     console.table(response);
   }
 
+  verify() {
+    return this.http.post<RegisterRequest>(
+      `${API_URL}/login/test-token`,
+      {},
+      this.httpOption.getHttpOptions()
+    );
+  }
+
   private handleError(error: Error, errorValue: any) {
     console.error(error);
     return of(errorValue);

@@ -10,7 +10,7 @@ import { TokenService } from "../../services/token/token.service";
   selector: "app-login",
   imports: [FormsModule],
   templateUrl: "./login.component.html",
-  styleUrl: "./login.component.css",
+  styleUrl: "./login.component.css"
 })
 export class LoginComponent {
   private router = inject(Router);
@@ -21,11 +21,11 @@ export class LoginComponent {
   onSubmitLogin() {
     this.authenticationService.login(this.loginRequest).subscribe({
       next: (res: LoginResponse) => {
-        //this.router.navigate(['']);
+        this.router.navigate([""]);
       },
       error: (err) => {
         console.error(err);
-      },
+      }
     });
   }
 
