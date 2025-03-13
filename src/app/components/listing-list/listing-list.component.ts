@@ -5,10 +5,11 @@ import { ListingsService } from "../../services/listings/listings.service";
 import { ListingRequest } from "../../types/Listing";
 import { CategoryRequest } from "../../types/Category";
 import { CategoryService } from "../../services/category/category.service";
+import { ListingFormComponent } from "../listing-form/listing-form.component";
 
 @Component({
   selector: "app-listing-list",
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, ListingFormComponent],
   templateUrl: "./listing-list.component.html",
   styleUrl: "./listing-list.component.css"
 })
@@ -23,6 +24,7 @@ export class ListingListComponent {
   // Search query and selected category
   searchQuery = "";
   selectedCategory: number = 0;
+  isModalOpen: boolean = false;
 
   // Available categories for filtering
 
@@ -84,5 +86,13 @@ export class ListingListComponent {
   onDelete(listing: any) {
     console.log("Delete:", listing);
     // Add your delete logic here
+  }
+
+  addListing() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
   }
 }

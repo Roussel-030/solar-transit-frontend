@@ -8,6 +8,7 @@
     <div>
       <button
         class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+        (click)="addListing()"
       >
         Add
       </button>
@@ -82,6 +83,64 @@
           <p class="text-lg font-semibold text-white">{{ listing.name }}</p>
           <p class="text-sm text-gray-200">{{ listing.address }}</p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
+  <!-- Modal -->
+  <div
+    *ngIf="isModalOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="bg-white rounded-lg shadow-lg w-1/2">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center pb-4">
+        <h3 class="text-lg font-semibold text-gray-700">Add New Listing</h3>
+        <button
+          class="text-gray-500 hover:text-gray-700"
+          (click)="closeModal()"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="space">
+        <app-listing-form
+          [categories]="categories"
+          (onCancel)="closeModal()"
+        ></app-listing-form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end pt-4">
+        <!-- <button
+          class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2 hover:bg-gray-100"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="border rounded-md text-sm font-semibold text-white bg-blue-600 p-2 hover:bg-blue-700"
+          (click)="saveListing()"
+        >
+          Save
+        </button> -->
       </div>
     </div>
   </div>
