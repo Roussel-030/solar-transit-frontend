@@ -13,6 +13,8 @@ export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
 
   ngOnInit(): void {
-    throw new Error("Method not implemented.");
+    this.categoryService
+      .readCategory()
+      .subscribe((categoryList) => (this.categoryList = categoryList.data));
   }
 }

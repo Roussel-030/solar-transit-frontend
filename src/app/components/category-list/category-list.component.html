@@ -25,14 +25,16 @@
           </tr>
         </thead>
         <tbody class="text-gray-500">
+          @for(category of categoryList; track category.id) {
+
           <tr>
             <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-              <p class="whitespace-no-wrap">1</p>
+              <p class="whitespace-no-wrap">{{ category.id }}</p>
             </td>
             <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
               <div class="flex items-center">
                 <div class="ml-3">
-                  <p class="whitespace-no-wrap">Name category</p>
+                  <p class="whitespace-no-wrap">{{ category.name }}</p>
                 </div>
               </div>
             </td>
@@ -49,6 +51,8 @@
               </button>
             </td>
           </tr>
+
+          }
         </tbody>
       </table>
     </div>
