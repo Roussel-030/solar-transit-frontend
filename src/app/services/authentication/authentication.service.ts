@@ -11,7 +11,7 @@ import { Role } from "../../types/Role";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class AuthenticationService {
   constructor(private tokenService: TokenService) {}
@@ -77,10 +77,6 @@ export class AuthenticationService {
       {},
       this.httpOption.getHttpOptions()
     );
-  }
-
-  logout() {
-    this.tokenService.remove_token();
   }
 
   private handleError(error: Error, errorValue: any) {
