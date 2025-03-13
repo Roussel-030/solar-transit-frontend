@@ -9,7 +9,11 @@
     </div>
 
     <div class="flex items-center p-6 h-full w-full">
-      <form class="max-w-lg w-full mx-auto">
+      <form
+        class="max-w-lg w-full mx-auto"
+        (ngSubmit)="onSubmitRegister()"
+        #registerForm="ngForm"
+      >
         <div class="mb-12">
           <h3
             class="text-blue-400 md:text-3xl text-2xl font-extrabold max-md:text-center"
@@ -18,14 +22,15 @@
           </h3>
         </div>
         <div class="mt-6">
-          <label class="text-gray-800 text-xs block mb-2">Email</label>
+          <label class="text-gray-800 text-xs block mb-2">Username</label>
           <div class="relative flex items-center">
             <input
-              name="email"
+              [(ngModel)]="registerRequest.username"
+              name="username"
               type="text"
               required
               class="w-full bg-transparent text-sm border-b border-gray-300 focus:border-blue-500 px-2 py-3 outline-none"
-              placeholder="Enter email"
+              placeholder="Enter username"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +67,7 @@
           <label class="text-gray-800 text-xs block mb-2">Password</label>
           <div class="relative flex items-center">
             <input
+              [(ngModel)]="registerRequest.password"
               name="password"
               type="password"
               required
@@ -85,7 +91,8 @@
 
         <div class="mt-12">
           <button
-            type="button"
+            [disabled]="!registerForm.form.valid"
+            type="submit"
             class="w-full py-3 px-6 text-sm tracking-wider font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white focus:outline-none"
           >
             Creat an account

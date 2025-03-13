@@ -13,7 +13,11 @@
         />
       </div>
 
-      <form class="md:max-w-md w-full mx-auto">
+      <form
+        class="md:max-w-md w-full mx-auto"
+        onsubmit="onSubmitLogin()"
+        #loginForm="ngForm"
+      >
         <div class="mb-12">
           <h3 class="text-4xl font-extrabold text-blue-600">Sign in</h3>
         </div>
@@ -21,11 +25,12 @@
         <div>
           <div class="relative flex items-center">
             <input
-              name="email"
+              [(ngModel)]="loginRequest.username"
+              name="username"
               type="text"
               required
               class="w-full text-sm border-b border-gray-300 focus:border-blue-600 px-2 py-3 outline-none"
-              placeholder="Enter email"
+              placeholder="Enter username"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,6 +67,7 @@
         <div class="mt-8">
           <div class="relative flex items-center">
             <input
+              [(ngModel)]="loginRequest.password"
               name="password"
               type="password"
               required
@@ -85,7 +91,8 @@
 
         <div class="mt-12">
           <button
-            type="button"
+            [disabled]="!loginForm.form.valid"
+            type="submit"
             class="w-full shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
           >
             Sign in

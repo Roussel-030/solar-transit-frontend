@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { menuNames } from '../util/menuNames';
+import { menuNames } from './util/menuNames';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { CategoryListComponent } from './components/category-list/category-list.component';
 import { CategoryFormComponent } from './components/category-form/category-form.component';
