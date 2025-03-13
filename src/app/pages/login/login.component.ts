@@ -21,7 +21,8 @@ export class LoginComponent {
   onSubmitLogin() {
     this.authenticationService.login(this.loginRequest).subscribe({
       next: (res: LoginResponse) => {
-        this.router.navigate([""]);
+        console.log(res);
+        this.router.navigate([menuNames.home.path]);
       },
       error: (err) => {
         console.error(err);

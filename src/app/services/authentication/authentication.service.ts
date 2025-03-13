@@ -60,7 +60,7 @@ export class AuthenticationService {
 
   verify() {
     return this.http.post<RegisterRequest>(
-      `${API_URL}/login/test-token`,
+      `${API_URL}/login/verify-token`,
       {},
       this.httpOption.getHttpOptions()
     );
