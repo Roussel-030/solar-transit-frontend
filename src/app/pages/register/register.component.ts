@@ -10,7 +10,7 @@ import { FormsModule } from "@angular/forms";
   selector: "app-register",
   imports: [FormsModule],
   templateUrl: "./register.component.html",
-  styleUrl: "./register.component.css"
+  styleUrl: "./register.component.css",
 })
 export class RegisterComponent {
   private router = inject(Router);
@@ -18,19 +18,18 @@ export class RegisterComponent {
   registerRequest: RegisterRequest = {
     username: "",
     password: "",
-    role: Role.USER
+    role: Role.USER,
   };
 
   onSubmitRegister() {
     this.authenticationService.register(this.registerRequest).subscribe({
       next: (data) => {
         console.log(data);
-
-        this.router.navigate([menuNames.home.path]);
+        this.goToLogin();
       },
       error: (err) => {
         console.error(err);
-      }
+      },
     });
   }
 
