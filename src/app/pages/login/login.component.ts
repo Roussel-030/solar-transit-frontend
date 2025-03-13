@@ -4,18 +4,16 @@ import { menuNames } from "../../util/menuNames";
 import { AuthenticationService } from "../../services/authentication/authentication.service";
 import { LoginRequest, LoginResponse } from "../../types/Login";
 import { FormsModule } from "@angular/forms";
-import { TokenService } from "../../services/token/token.service";
 
 @Component({
   selector: "app-login",
   imports: [FormsModule],
   templateUrl: "./login.component.html",
-  styleUrl: "./login.component.css"
+  styleUrl: "./login.component.css",
 })
 export class LoginComponent {
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
-  private tokenService = inject(TokenService);
   loginRequest: LoginRequest = { username: "", password: "" };
 
   onSubmitLogin() {
@@ -26,7 +24,7 @@ export class LoginComponent {
       },
       error: (err) => {
         console.error(err);
-      }
+      },
     });
   }
 
