@@ -13,14 +13,14 @@ import { RouterModule } from "@angular/router";
   styleUrl: "./header.component.css",
 })
 export class HeaderComponent implements OnInit {
-  isAdmin: boolean = true;
-  isAuthenticated: boolean = true;
+  isAdmin: boolean = false;
+  isAuthenticated: boolean = false;
   headerService = inject(HeaderService);
   tokenService = inject(TokenService);
   menus = menuNames;
 
   ngOnInit(): void {
-    // this.isAuthenticated = this.tokenService.get_token()? true : false;
-    // this.isAdmin = this.headerService.get_role() === Role.ADMIN;
+    this.isAuthenticated = this.tokenService.get_token() ? true : false;
+    this.isAdmin = this.headerService.get_role() === Role.ADMIN;
   }
 }

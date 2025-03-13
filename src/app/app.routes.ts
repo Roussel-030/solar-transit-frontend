@@ -38,15 +38,18 @@ export const routes: Routes = [
     path: menuNames.user.path,
     title: menuNames.user.name,
     component: UserProfileComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: menuNames.listing.path,
     title: menuNames.listing.name,
     component: ListingListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: menuNames.category.path,
     title: menuNames.category.name,
     component: CategoryListComponent,
+    canActivate: [AuthGuard],
   },
 ];
