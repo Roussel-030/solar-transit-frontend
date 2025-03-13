@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class TokenService {
   set_token(token: string) {
@@ -10,5 +10,9 @@ export class TokenService {
 
   get_token() {
     return localStorage.getItem("token") as string;
+  }
+
+  remove_token() {
+    localStorage.clear();
   }
 }

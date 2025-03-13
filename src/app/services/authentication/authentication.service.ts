@@ -66,6 +66,10 @@ export class AuthenticationService {
     );
   }
 
+  logout() {
+    this.tokenService.remove_token();
+  }
+
   private handleError(error: Error, errorValue: any) {
     console.error(error);
     return of(errorValue);
