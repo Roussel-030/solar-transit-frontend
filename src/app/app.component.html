@@ -1,1 +1,3 @@
+<app-admin-header *ngIf="role === 'admin'"></app-admin-header>
+<app-user-header *ngIf="role === 'user'"></app-user-header>
 <router-outlet></router-outlet>
