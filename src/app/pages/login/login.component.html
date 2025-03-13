@@ -15,7 +15,7 @@
 
       <form
         class="md:max-w-md w-full mx-auto"
-        onsubmit="onSubmitLogin()"
+        (ngSubmit)="onSubmitLogin()"
         #loginForm="ngForm"
       >
         <div class="mb-12">
