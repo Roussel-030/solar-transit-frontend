@@ -62,15 +62,16 @@ export class ListingListComponent {
 
   // Function to apply search and category filters
   applyFilters() {
-    this.filteredListings = this.listings.filter((listing) => {
-      const matchesSearch = listing.name
-        .toLowerCase()
-        .includes(this.searchQuery.toLowerCase());
-      const matchesCategory = this.selectedCategory
-        ? listing.category_id === this.selectedCategory
-        : true;
-      return matchesSearch && matchesCategory;
-    });
+    this.listingServices
+      .searchListings(this.searchQuery, +this.selectedCategory)
+      .subscribe({
+        next: (data) => {
+          this.filteredListings = data.data;
+        },
+
+        error: () => {},
+        complete: () => {}
+      });
   }
 
   // Function to handle update button click

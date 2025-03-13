@@ -13,6 +13,7 @@ export class ListingsService {
   private http = inject(HttpClient);
   private httpOption = inject(HttpService);
   readonly listingUrl = `${API_URL}/listings/`;
+  readonly searchUrl = `${API_URL}/listings/search`;
 
   getListing(): Observable<ListingResponse> {
     return this.http
@@ -32,7 +33,7 @@ export class ListingsService {
       .append("category_id", categoryId);
     return this.http
       .get<ListingResponse>(
-        this.listingUrl,
+        this.searchUrl,
         this.httpOption.getHttpOptions(params)
       )
       .pipe(
