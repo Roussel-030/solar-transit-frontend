@@ -51,9 +51,9 @@
           [(ngModel)]="selectedCategory"
           (change)="applyFilters()"
         >
-          <option value="">All Categories</option>
-          <option *ngFor="let category of categories" [value]="category">
-            {{ category }}
+          <option value="0">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.name }}
           </option>
         </select>
       </div>

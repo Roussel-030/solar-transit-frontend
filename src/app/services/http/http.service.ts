@@ -1,4 +1,4 @@
-import { HttpHeaders } from "@angular/common/http";
+import { HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { TokenService } from "../token/token.service";
 
@@ -7,12 +7,13 @@ import { TokenService } from "../token/token.service";
 })
 export class HttpService {
   constructor(private tokenService: TokenService) {}
-  public getHttpOptions() {
+  public getHttpOptions(params?: HttpParams) {
     const httpOptions = {
       headers: new HttpHeaders({
         "Content-type": "application/json",
         Authorization: "Bearer " + this.tokenService.get_token()
-      })
+      }),
+      params: params
     };
     return httpOptions;
   }

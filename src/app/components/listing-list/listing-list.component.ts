@@ -2,7 +2,9 @@ import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ListingsService } from "../../services/listings/listings.service";
-import { Listing } from "../../types/Listing";
+import { ListingRequest } from "../../types/Listing";
+import { CategoryRequest } from "../../types/Category";
+import { CategoryService } from "../../services/category/category.service";
 
 @Component({
   selector: "app-listing-list",
@@ -12,7 +14,8 @@ import { Listing } from "../../types/Listing";
 })
 export class ListingListComponent {
   // Sample data for listings
-  listings: Listing[] = [];
+  listings: ListingRequest[] = [];
+  categories: CategoryRequest[] = [];
 
   // Filtered listings based on search and category
   filteredListings = this.listings;
@@ -22,12 +25,15 @@ export class ListingListComponent {
   selectedCategory: number = 0;
 
   // Available categories for filtering
-  categories = ["Announce", "Clothing", "Accessories"];
 
-  constructor(private listingServices: ListingsService) {}
+  constructor(
+    private listingServices: ListingsService,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit(): void {
-    this.getListing(); // Apply filters on initialization
+    this.getListing();
+    this.getCategory();
   }
 
   getListing() {
@@ -40,6 +46,17 @@ export class ListingListComponent {
       complete: () => {
         this.applyFilters();
       }
+    });
+  }
+
+  getCategory() {
+    this.categoryService.readCategory().subscribe({
+      next: (data) => {
+        this.categories = data.data;
+      },
+
+      error: () => {},
+      complete: () => {}
     });
   }
 

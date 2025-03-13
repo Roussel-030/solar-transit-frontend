@@ -1,4 +1,4 @@
-export type Listing = {
+export type ListingRequest = {
   id?: number;
   name: string;
   address: string;
@@ -7,7 +7,7 @@ export type Listing = {
   images?: any;
 };
 
-export type ResponseListing = {
+export type ListingResponse = {
   count: number;
-  data: Listing[];
+  data: ListingRequest[];
 };

@@ -8,20 +8,17 @@ import { environment } from "../../../environments/environment";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class CategoryService {
   private http = inject(HttpClient);
   private httpOption = inject(HttpService);
-  readonly apiUrlCreateCategory = `${API_URL}/categories`;
-  readonly apiUrlReadCategory = `${API_URL}/categories`;
-  readonly apiUrlUpdateCategory = `${API_URL}/categories`;
-  readonly apiUrlDeleteCategory = `${API_URL}/categories`;
+  readonly apiUrlCategory = `${API_URL}/categories`;
 
   createCategory(request: CategoryRequest): Observable<CategoryResponse> {
     return this.http
       .post<CategoryResponse>(
-        this.apiUrlCreateCategory,
+        this.apiUrlCategory,
         request,
         this.httpOption.getHttpOptions()
       )
@@ -31,16 +28,21 @@ export class CategoryService {
       );
   }
 
-  readCategory(): Observable<CategoryRequest[]> {
-    return this.http.get<CategoryRequest[]>(this.apiUrlReadCategory).pipe(
-      tap((response) => this.log(response)),
-      catchError((error) => this.handleError(error, null))
-    );
+  readCategory(): Observable<CategoryResponse> {
+    return this.http
+      .get<CategoryResponse>(
+        this.apiUrlCategory,
+        this.httpOption.getHttpOptions()
+      )
+      .pipe(
+        tap((response) => this.log(response)),
+        catchError((error) => this.handleError(error, null))
+      );
   }
 
   updateCategory(request: CategoryRequest) {
     return this.http
-      .put(this.apiUrlUpdateCategory, request, this.httpOption.getHttpOptions())
+      .put(this.apiUrlCategory, request, this.httpOption.getHttpOptions())
       .pipe(
         tap((response) => this.log(response)),
         catchError((error) => this.handleError(error, null))
@@ -48,7 +50,7 @@ export class CategoryService {
   }
 
   deleteCategory(categoryId: number) {
-    return this.http.delete(`${this.apiUrlDeleteCategory}/${categoryId}`).pipe(
+    return this.http.delete(`${this.apiUrlCategory}/${categoryId}`).pipe(
       tap((response) => this.log(response)),
       catchError((error) => this.handleError(error, null))
     );
