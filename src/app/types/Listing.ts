@@ -4,6 +4,8 @@ export type ListingRequest = {
   address: string;
   description: string;
   category_id: number;
+  latitude: string;
+  longitude: string;
   images?: any;
 };
 
