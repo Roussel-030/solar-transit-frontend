@@ -15,6 +15,7 @@ export class ListingFormComponent implements OnInit {
   constructor(private listingService: ListingsService) {}
   @Input() listening!: ListingRequest;
   @Input() categories: CategoryRequest[] = [];
+  @Input() editing: boolean = false;
   @Output() onCancel = new EventEmitter<any>();
   selectedCategory: number = 0;
 
@@ -22,7 +23,7 @@ export class ListingFormComponent implements OnInit {
   selectedImageFile: File | null = null; // To store the selected image file
 
   ngOnInit(): void {
-    if (!this.listening) {
+    if (!this.listening || !this.editing) {
       this.listening = {
         name: "",
         description: "",
@@ -36,7 +37,7 @@ export class ListingFormComponent implements OnInit {
   }
 
   cancel() {
-    this.onCancel.emit();
+    this.onCancel.emit(false);
   }
 
   // Handle image upload
@@ -56,14 +57,25 @@ export class ListingFormComponent implements OnInit {
       this.listingService.uploadImage(this.selectedImageFile).subscribe({
         next: (response) => {
           this.listening.image_name = response;
-          this.listingService.createListing(this.listening).subscribe({
-            next: (listing) => {
-              if (listing) {
+          if (!this.editing)
+            this.listingService.createListing(this.listening).subscribe({
+              next: (listing) => {
+                if (listing) {
+                }
+              },
+              error: () => {},
+              complete: () => {
+                this.onCancel.emit(true);
               }
-            },
-            error: () => {},
-            complete: () => {}
-          });
+            });
+          else if (this.listening.id)
+            this.listingService
+              .updateListing(this.listening, this.listening.id)
+              .subscribe({
+                complete: () => {
+                  this.onCancel.emit(true);
+                }
+              });
         },
         error: (error) => {
           console.error("Error uploading image:", error);
@@ -71,14 +83,34 @@ export class ListingFormComponent implements OnInit {
         }
       });
     } else {
-      this.listingService.createListing(this.listening).subscribe({
-        next: (listing) => {
-          if (listing) {
+      if (!this.editing)
+        this.listingService.createListing(this.listening).subscribe({
+          next: (listing) => {
+            if (listing) {
+            }
+          },
+          error: () => {},
+          complete: () => {
+            this.onCancel.emit(true);
           }
-        },
-        error: () => {},
-        complete: () => {}
-      });
+        });
+      else if (this.listening.id)
+        this.listingService
+          .updateListing(this.listening, this.listening.id)
+          .subscribe({
+            complete: () => {
+              this.onCancel.emit(true);
+            }
+          });
     }
+  }
+
+  deleteListing() {
+    if (this.listening.id)
+      this.listingService.deleteListing(this.listening.id).subscribe({
+        complete: () => {
+          this.onCancel.emit(true);
+        }
+      });
   }
 }

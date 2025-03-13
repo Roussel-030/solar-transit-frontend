@@ -139,7 +139,16 @@
         class="cursor-pointer rounded bg-blue-600 py-2 px-8 text-center text-lg font-bold text-white"
         type="submit"
       >
-        Create
+        {{ !editing ? "Create" : "Update" }}
+      </button>
+
+      <button
+        *ngIf="editing"
+        class="cursor-pointer rounded py-2 px-8 text-center text-lg font-bold text-white bg-red-500"
+        type="button"
+        (click)="deleteListing()"
+      >
+        Delete
       </button>
     </div>
   </form>

@@ -40,6 +40,19 @@ export class ListingsService {
       );
   }
 
+  deleteListing(id: number): Observable<ListingRequest> {
+    let params = new HttpParams().append("listings_id", id);
+    return this.http
+      .delete<ListingRequest>(
+        this.listingUrl,
+        this.httpOption.getHttpOptions(params)
+      )
+      .pipe(
+        tap((response) => {}),
+        catchError((error) => this.handleError(error, null))
+      );
+  }
+
   createListingImage(
     request: ListingImageRequest
   ): Observable<ListingImageRequest> {
@@ -55,12 +68,16 @@ export class ListingsService {
       );
   }
 
-  updateListing(request: ListingRequest): Observable<ListingRequest> {
+  updateListing(
+    request: ListingRequest,
+    id: number
+  ): Observable<ListingRequest> {
+    let params = new HttpParams().append("listings_id", id);
     return this.http
       .put<ListingRequest>(
         this.listingUrl,
         request,
-        this.httpOption.getHttpOptions()
+        this.httpOption.getHttpOptions(params)
       )
       .pipe(
         tap((response) => {}),
@@ -108,9 +125,7 @@ export class ListingsService {
     const formData = new FormData();
     formData.append("file", file); // 'file' should match the parameter name in your FastAPI endpoint
 
-    return this.http.post(this.listingUrl + "upload-image/", formData, {
-      responseType: "text" // Adjust based on your API response
-    });
+    return this.http.post(this.listingUrl + "upload-image/", formData);
   }
 
   getImage(name: string) {
