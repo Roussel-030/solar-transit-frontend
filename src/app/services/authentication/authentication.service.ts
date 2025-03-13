@@ -5,6 +5,7 @@ import { catchError, Observable, of, tap } from "rxjs";
 import { LoginRequest, LoginResponse } from "../../types/Login";
 import { HttpService } from "../http/http.service";
 import { environment } from "../../../environments/environment";
+import { TokenService } from "../token/token.service";
 
 const API_URL = environment.apiUrl;
 
@@ -12,6 +13,7 @@ const API_URL = environment.apiUrl;
   providedIn: "root",
 })
 export class AuthenticationService {
+  constructor(private tokenService: TokenService) {}
   private http = inject(HttpClient);
   private httpOption = inject(HttpService);
   readonly apiUrlRegister = `${API_URL}/login/signup`;
@@ -25,20 +27,26 @@ export class AuthenticationService {
         this.httpOption.getHttpOptions()
       )
       .pipe(
-        tap((response) => this.log(response)),
+        tap((response) => {
+          this.log(response);
+          this.tokenService.set_token(response.access_token);
+        }),
         catchError((error) => this.handleError(error, null))
       );
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(
+      .post<RegisterResponse>(
         this.apiUrlLogin,
         request,
         this.httpOption.getHttpOptions()
       )
       .pipe(
-        tap((response) => this.log(response)),
+        tap((response) => {
+          this.log(response);
+          this.tokenService.set_token(response.access_token);
+        }),
         catchError((error) => this.handleError(error, null))
       );
   }
