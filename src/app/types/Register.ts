@@ -1,4 +1,4 @@
-import { Role } from './Role';
+import { Role } from "./Role";
 
 export type RegisterRequest = {
   id?: number;
@@ -7,4 +7,7 @@ export type RegisterRequest = {
   role: Role;
 };
 
-export type RegisterResponse = {};
+export type RegisterResponse = {
+  access_token: string;
+  token_type?: string;
+};

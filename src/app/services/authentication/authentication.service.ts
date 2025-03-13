@@ -1,18 +1,23 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { RegisterRequest, RegisterResponse } from '../../types/Register';
-import { catchError, Observable, of, tap } from 'rxjs';
-import { LoginRequest, LoginResponse } from '../../types/Login';
-import { HttpService } from '../http/http.service';
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { RegisterRequest, RegisterResponse } from "../../types/Register";
+import { catchError, Observable, of, tap } from "rxjs";
+import { LoginRequest, LoginResponse } from "../../types/Login";
+import { HttpService } from "../http/http.service";
+import { environment } from "../../../environments/environment";
+import { TokenService } from "../token/token.service";
+
+const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class AuthenticationService {
+  constructor(private tokenService: TokenService) {}
   private http = inject(HttpClient);
   private httpOption = inject(HttpService);
-  readonly apiUrlRegister = '';
-  readonly apiUrlLogin = '';
+  readonly apiUrlRegister = `${API_URL}/login/signup`;
+  readonly apiUrlLogin = `${API_URL}/login/access-token`;
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http
@@ -22,20 +27,26 @@ export class AuthenticationService {
         this.httpOption.getHttpOptions()
       )
       .pipe(
-        tap((response) => this.log(response)),
+        tap((response) => {
+          this.log(response);
+          this.tokenService.set_token(response.access_token);
+        }),
         catchError((error) => this.handleError(error, null))
       );
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(
+      .post<RegisterResponse>(
         this.apiUrlLogin,
         request,
         this.httpOption.getHttpOptions()
       )
       .pipe(
-        tap((response) => this.log(response)),
+        tap((response) => {
+          this.log(response);
+          this.tokenService.set_token(response.access_token);
+        }),
         catchError((error) => this.handleError(error, null))
       );
   }
