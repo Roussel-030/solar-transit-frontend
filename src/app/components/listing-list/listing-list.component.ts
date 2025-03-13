@@ -29,7 +29,7 @@ export class ListingListComponent {
   // Available categories for filtering
 
   constructor(
-    private listingServices: ListingsService,
+    public listingServices: ListingsService,
     private categoryService: CategoryService
   ) {}
 

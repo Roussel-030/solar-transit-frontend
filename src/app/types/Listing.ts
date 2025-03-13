@@ -6,7 +6,12 @@ export type ListingRequest = {
   category_id: number;
   latitude: string;
   longitude: string;
-  images?: any;
+  image_name?: any;
+};
+
+export type ListingImageRequest = {
+  name: string;
+  listing_id: number;
 };
 
 export type ListingResponse = {

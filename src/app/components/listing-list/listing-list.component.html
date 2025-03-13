@@ -73,7 +73,10 @@
         <!-- Background Image -->
         <div
           class="absolute inset-0 bg-cover bg-center"
-          [ngStyle]="{ 'background-image': 'url(' + listing.images[0] + ')' }"
+          [ngStyle]="{
+            'background-image':
+              'url(' + listingServices.getImage(listing.image_name) + ')'
+          }"
         ></div>
         <!-- Overlay to improve text readability -->
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
