@@ -12,7 +12,7 @@ import { HeaderService } from "../header/header.service";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class AuthenticationService {
   constructor(private tokenService: TokenService) {}

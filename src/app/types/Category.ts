@@ -3,4 +3,7 @@ export type CategoryRequest = {
   name: string;
 };
 
-export type CategoryResponse = {};
+export type CategoryResponse = {
+  count: number;
+  data: CategoryRequest[];
+};
