@@ -18,8 +18,8 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     if (
-      localStorage.getItem("scolary_token") !== "null" &&
-      localStorage.getItem("scolary_token") !== null
+      localStorage.getItem("token") !== "null" &&
+      localStorage.getItem("token") !== null
     ) {
       return true;
     }
