@@ -1,6 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { ListingsService } from "../../services/listings/listings.service";
+import { Listing } from "../../types/Listing";
 
 @Component({
   selector: "app-listing-list",
@@ -10,55 +12,35 @@ import { FormsModule } from "@angular/forms";
 })
 export class ListingListComponent {
   // Sample data for listings
-  listings = [
-    {
-      id: 1,
-      name: "Shoes",
-      description: "Beautiful shoes",
-      category: "Announce",
-      image: "Announce",
-      address: "Announce"
-    },
-    {
-      id: 2,
-      name: "T-Shirt",
-      description: "Comfortable T-Shirt",
-      category: "Clothing"
-    },
-    {
-      id: 3,
-      name: "Watch",
-      description: "Elegant watch",
-      category: "Accessories"
-    },
-    {
-      id: 4,
-      name: "Backpack",
-      description: "Durable backpack",
-      category: "Accessories"
-    },
-    {
-      id: 5,
-      name: "Jeans",
-      description: "Stylish jeans",
-      category: "Clothing"
-    }
-  ];
+  listings: Listing[] = [];
 
   // Filtered listings based on search and category
   filteredListings = this.listings;
 
   // Search query and selected category
   searchQuery = "";
-  selectedCategory = "";
+  selectedCategory: number = 0;
 
   // Available categories for filtering
   categories = ["Announce", "Clothing", "Accessories"];
 
-  constructor() {}
+  constructor(private listingServices: ListingsService) {}
 
   ngOnInit(): void {
-    this.applyFilters(); // Apply filters on initialization
+    this.getListing(); // Apply filters on initialization
+  }
+
+  getListing() {
+    this.listingServices.getListing().subscribe({
+      next: (data) => {
+        this.listings = data.data;
+      },
+
+      error: () => {},
+      complete: () => {
+        this.applyFilters();
+      }
+    });
   }
 
   // Function to apply search and category filters
@@ -68,7 +50,7 @@ export class ListingListComponent {
         .toLowerCase()
         .includes(this.searchQuery.toLowerCase());
       const matchesCategory = this.selectedCategory
-        ? listing.category === this.selectedCategory
+        ? listing.category_id === this.selectedCategory
         : true;
       return matchesSearch && matchesCategory;
     });
