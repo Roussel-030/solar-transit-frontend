@@ -5,6 +5,7 @@ import { Role } from "../../../types/Role";
 import { TokenService } from "../../../services/token/token.service";
 import { menuNames } from "../../../util/menuNames";
 import { Router, RouterModule } from "@angular/router";
+import { AuthenticationService } from "../../../services/authentication/authentication.service";
 
 @Component({
   selector: "app-header",
@@ -18,11 +19,20 @@ export class HeaderComponent implements OnInit {
   headerService = inject(HeaderService);
   tokenService = inject(TokenService);
   router = inject(Router);
+  authService = inject(AuthenticationService);
   menus = menuNames;
 
   ngOnInit(): void {
-    this.isAuthenticated = this.tokenService.get_token() ? true : false;
-    this.isAdmin = this.headerService.get_role() === Role.ADMIN;
+    this.authService.isAuthenticated$.subscribe((isAuthenticated) => {
+      this.isAuthenticated = isAuthenticated;
+    });
+
+    this.authService.isAdmin$.subscribe((isAdmin) => {
+      this.isAdmin = isAdmin;
+    });
+
+    // Initial check
+    this.authService.checkAuthentication();
   }
 
   logout() {
