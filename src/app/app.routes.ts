@@ -5,6 +5,7 @@ import { AuthGuard } from "./services/guard/auth.guard";
 import { UserProfileComponent } from "./components/user-profile/user-profile.component";
 import { ListingListComponent } from "./components/listing-list/listing-list.component";
 import { CategoryListComponent } from "./components/category-list/category-list.component";
+import { MapComponent } from "./components/map/map/map.component";
 
 export const routes: Routes = [
   {
@@ -51,6 +52,12 @@ export const routes: Routes = [
     path: menuNames.listing.path,
     title: menuNames.listing.name,
     component: ListingListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: menuNames.map.path,
+    title: menuNames.listing.name,
+    component: MapComponent,
     canActivate: [AuthGuard],
   },
 ];
