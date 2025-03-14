@@ -76,8 +76,7 @@ export class AuthenticationService {
 
           this.isAuthenticatedSubject.next(true);
           this.isAdminSubject.next(response.role === Role.ADMIN);
-        }),
-        catchError((error) => this.handleError(error, null))
+        })
       );
   }
 
