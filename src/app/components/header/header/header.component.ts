@@ -36,7 +36,8 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.tokenService.remove_token();
     this.router.navigate([menuNames.login.path]);
+    this.tokenService.remove_token();
+    this.isAuthenticated = false;
   }
 }
