@@ -8,7 +8,7 @@ import { ListingsService } from "../../../services/listings/listings.service";
   selector: "app-map",
   imports: [],
   templateUrl: "./map.component.html",
-  styleUrl: "./map.component.css",
+  styleUrl: "./map.component.css"
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
@@ -33,7 +33,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     listingRequest.forEach((listing) => {
       const marker = L.marker([
         Number(listing.latitude),
-        Number(listing.longitude),
+        Number(listing.longitude)
       ])
         .addTo(this.map)
         .bindPopup(this.getPopupContent(listing));
@@ -45,9 +45,10 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.listingServices.getListing().subscribe({
       next: (data) => {
         this.listings = data.data;
+        this.updateMarkers(this.listings);
       },
 
-      error: () => {},
+      error: () => {}
       // complete: () => {
       //   this.applyFilters();
       // }
@@ -55,11 +56,21 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private initMap(): void {
+    delete (L.Icon.Default.prototype as any)._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+      iconUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+      shadowUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
+    });
     this.map = L.map("map").setView([48.8566, 2.3522], 3);
 
     this.googleTileLayer = L.tileLayer(environment.httpMapLayer, {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      attribution: "&copy; Google Maps",
+      attribution: "&copy; Google Maps"
     }).addTo(this.map);
   }
 
