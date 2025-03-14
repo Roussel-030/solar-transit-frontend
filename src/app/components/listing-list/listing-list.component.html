@@ -1,0 +1,153 @@
+<div
+  class="text-slate-700 max-w-screen-xl flex-col overflow-hidden md:mx-auto md:flex-row md:items-center px-4 py-8 sm:px-8"
+>
+  <!-- Header Section -->
+  <div class="flex items-center justify-between pb-6">
+    <div>
+      <h2 class="font-semibold text-gray-700">List listings</h2>
+      <span class="text-xs text-gray-500">View list of listings</span>
+    </div>
+    <div>
+      <button
+        class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+        (click)="addListing()"
+      >
+        Add
+      </button>
+    </div>
+  </div>
+
+  <!-- Search and Filter Section -->
+  <div class="mb-6 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <!-- Search Bar -->
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="border rounded-md p-2 pl-10 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg
+            class="h-5 w-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            ></path>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Filter Dropdown -->
+      <div class="relative">
+        <select
+          class="border rounded-md p-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          [(ngModel)]="selectedCategory"
+          (change)="applyFilters()"
+        >
+          <option value="0">All Categories</option>
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid of Cards -->
+  <div class="mx-0 max-w-screen-lg px-0 py-8 sm:px-0">
+    <!-- Grid of Cards -->
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-start"
+    >
+      <!-- Loop through filtered listings -->
+      <div
+        *ngFor="let listing of filteredListings"
+        class="relative bg-white rounded-lg shadow-md overflow-hidden hover:cursor-pointer"
+        (click)="onEdit(listing)"
+      >
+        <!-- Background Image using <img> tag -->
+        <img
+          class="absolute inset-0 w-full h-full object-cover"
+          [src]="listingServices.getImage(listing.image_name)"
+          alt="Listing Image"
+        />
+        <!-- Overlay to improve text readability -->
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+
+        <!-- Content (Name and Address) -->
+        <div class="relative p-6 h-48 flex flex-col justify-end">
+          <p class="text-lg font-semibold text-white">{{ listing.name }}</p>
+          <p class="text-sm text-gray-200">{{ listing.address }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div
+    *ngIf="isModalOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+  >
+    <div class="bg-white rounded-lg shadow-lg w-1/2">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center m-5">
+        <h3 class="text-lg font-semibold text-gray-700"></h3>
+        <button
+          class="text-gray-500 hover:text-gray-700"
+          (click)="closeModal()"
+        >
+          <svg
+            class="h-6 w-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="space">
+        <app-listing-form
+          [categories]="categories"
+          (onCancel)="closeModal($event)"
+          [listening]="selectedListing"
+          [editing]="isEditing"
+        ></app-listing-form>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end pt-4">
+        <!-- <button
+          class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2 hover:bg-gray-100"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+        <button
+          class="border rounded-md text-sm font-semibold text-white bg-blue-600 p-2 hover:bg-blue-700"
+          (click)="saveListing()"
+        >
+          Save
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>

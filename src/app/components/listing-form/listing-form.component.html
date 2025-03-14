@@ -1,0 +1,166 @@
+<div>
+  <div>
+    <div
+      class="mx-auto w-full sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-xl"
+    >
+      <div class="mx-2 py-1 text-center md:mx-auto md:w-2/3">
+        <h1 class="mb-0 text-2xl font-black leading-4">
+          {{ editing ? "Update listing" : "Add listing" }}
+        </h1>
+      </div>
+    </div>
+  </div>
+  <form class="py-10 px-8" (ngSubmit)="onSubmit()">
+    <!-- Name and Category on the same row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="mb-2 block text-sm font-bold" for="name">Name</label>
+        <input
+          class="shadow-sm w-full cursor-text appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+          id="name"
+          type="text"
+          placeholder="name"
+          required=""
+          [(ngModel)]="listening.name"
+          name="name"
+        />
+        <span class="my-2 block"></span>
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-bold" for="category"
+          >Category</label
+        >
+        <select
+          class="shadow-sm mb-3 cursor-pointer w-full appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+          [(ngModel)]="listening.category_id"
+          id="category"
+          name="category"
+        >
+          <option *ngFor="let category of categories" [value]="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Latitude and Longitude on the same row -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="mb-2 block text-sm font-bold" for="latitude"
+          >Latitude</label
+        >
+        <input
+          class="shadow-sm w-full cursor-text appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+          id="latitude"
+          type="number"
+          placeholder="latitude"
+          required=""
+          [(ngModel)]="listening.latitude"
+          name="latitude"
+        />
+        <span class="my-2 block"></span>
+      </div>
+      <div>
+        <label class="mb-2 block text-sm font-bold" for="longitude"
+          >Longitude</label
+        >
+        <input
+          class="shadow-sm w-full cursor-text appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+          id="longitude"
+          type="number"
+          placeholder="longitude"
+          required=""
+          [(ngModel)]="listening.longitude"
+          name="longitude"
+        />
+        <span class="my-2 block"></span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-4">
+      <label class="mb-2 block text-sm font-bold" for="description"
+        >Description</label
+      >
+      <textarea
+        class="shadow-sm w-full cursor-text appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+        required=""
+        [(ngModel)]="listening.description"
+        name="description"
+      ></textarea>
+      <span class="my-2 block"></span>
+    </div>
+
+    <!-- Address with SVG Image Upload Icon -->
+    <div class="mb-4">
+      <label class="mb-2 block text-sm font-bold" for="address">Address</label>
+      <div class="flex items-center">
+        <input
+          class="shadow-sm w-full cursor-text appearance-none rounded border border-gray-300 py-2 px-3 leading-tight outline-none ring-blue-500 focus:ring"
+          id="address"
+          type="text"
+          placeholder="address"
+          required=""
+          [(ngModel)]="listening.address"
+          name="address"
+        />
+        <!-- SVG Icon for Image Upload -->
+        <label for="image-upload" class="ml-2 cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 text-blue-500 hover:text-blue-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+        </label>
+        <input
+          id="image-upload"
+          type="file"
+          accept="image/*"
+          class="hidden"
+          (change)="onImageUpload($event)"
+          name="image"
+        />
+      </div>
+      <!-- Display selected image name -->
+      <div *ngIf="selectedImageName" class="mt-2 text-sm text-gray-600">
+        Selected Image: {{ selectedImageName }}
+      </div>
+      <span class="my-2 block"></span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex items-center space-x-1 justify-center">
+      <button
+        class="cursor-pointer rounded bg-green-600 py-2 px-8 text-center text-lg font-bold text-white"
+        type="button"
+        (click)="cancel()"
+      >
+        Cancel
+      </button>
+      <button
+        class="cursor-pointer rounded bg-blue-600 py-2 px-8 text-center text-lg font-bold text-white"
+        type="submit"
+      >
+        {{ !editing ? "Create" : "Update" }}
+      </button>
+
+      <button
+        *ngIf="editing"
+        class="cursor-pointer rounded py-2 px-8 text-center text-lg font-bold text-white bg-red-500"
+        type="button"
+        (click)="deleteListing()"
+      >
+        Delete
+      </button>
+    </div>
+  </form>
+</div>

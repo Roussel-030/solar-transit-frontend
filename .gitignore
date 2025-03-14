@@ -1,0 +1,19 @@
+# Node modules
+node_modules/
+
+# Dossiers de build
+/dist/
+/out-tsc/
+
+# Fichiers de configuration utilisateur
+/.idea/
+/.vscode/
+
+# Logs
+*.log
+
+# Environnements
+.env
+
+.vscode/
+.angular/

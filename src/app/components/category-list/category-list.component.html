@@ -1,0 +1,73 @@
+@if(isPopupVisible) {
+<app-category-form
+  (closeModalCategory)="closeModalCategory($event)"
+  [categoryRequest]="category"
+  [titleModal]="titleModal"
+></app-category-form>
+}
+
+<div
+  class="text-slate-700 max-w-screen-xl flex-col overflow-hidden px-4 py-4 md:mx-auto md:flex-row md:items-center px-4 py-8 sm:px-8"
+>
+  <div class="flex items-center justify-between pb-6">
+    <div>
+      <h2 class="font-semibold text-gray-700">Category list</h2>
+      <span class="text-xs text-gray-500">View list of category</span>
+    </div>
+    <div>
+      <button
+        (click)="openModalCategory('Add category')"
+        class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+      >
+        Add
+      </button>
+    </div>
+  </div>
+  <div class="overflow-y-hidden rounded-lg border">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr
+            class="bg-blue-600 text-left text-xs font-semibold uppercase tracking-widest text-white"
+          >
+            <th class="px-5 py-3">ID</th>
+            <th class="px-5 py-3">Name</th>
+            <th class="px-5 py-3">Action</th>
+          </tr>
+        </thead>
+        <tbody class="text-gray-500">
+          @for(category of categoryList; track category.id) {
+
+          <tr>
+            <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+              <p class="whitespace-no-wrap">{{ category.id }}</p>
+            </td>
+            <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+              <div class="flex items-center">
+                <div class="ml-3">
+                  <p class="whitespace-no-wrap">{{ category.name }}</p>
+                </div>
+              </div>
+            </td>
+            <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+              <button
+                class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+                (click)="openModalCategory('Update category', category)"
+              >
+                Update
+              </button>
+              <button
+                class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+                (click)="deleteCategory(category)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
