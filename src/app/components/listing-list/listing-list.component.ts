@@ -26,10 +26,13 @@ export class ListingListComponent {
   selectedCategory: number = 0;
   isModalOpen: boolean = false;
 
+  selectedListing!: ListingRequest;
+  isEditing: boolean = false;
+
   // Available categories for filtering
 
   constructor(
-    private listingServices: ListingsService,
+    public listingServices: ListingsService,
     private categoryService: CategoryService
   ) {}
 
@@ -88,11 +91,20 @@ export class ListingListComponent {
     // Add your delete logic here
   }
 
-  addListing() {
+  onEdit(listing: ListingRequest) {
+    this.selectedListing = listing;
     this.isModalOpen = true;
+    this.isEditing = true;
   }
 
-  closeModal() {
+  addListing() {
+    this.isModalOpen = true;
+    this.isEditing = false;
+    this.selectedListing;
+  }
+
+  closeModal(isFetch: boolean = false) {
     this.isModalOpen = false;
+    if (isFetch) this.getListing();
   }
 }

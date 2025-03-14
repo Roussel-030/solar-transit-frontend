@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { RegisterRequest, RegisterResponse } from "../../types/Register";
-import { catchError, Observable, of, tap } from "rxjs";
+import { BehaviorSubject, catchError, Observable, of, tap } from "rxjs";
 import { LoginRequest, LoginResponse } from "../../types/Login";
 import { HttpService } from "../http/http.service";
 import { environment } from "../../../environments/environment";
@@ -22,6 +22,25 @@ export class AuthenticationService {
   private headerService = inject(HeaderService);
   readonly apiUrlRegister = `${API_URL}/login/signup`;
   readonly apiUrlLogin = `${API_URL}/login/access-token`;
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  private isAdminSubject = new BehaviorSubject<boolean>(false);
+
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+  isAdmin$ = this.isAdminSubject.asObservable();
+
+  checkAuthentication(): void {
+    const token = this.tokenService.get_token();
+    const isAuthenticated = !!token;
+    this.isAuthenticatedSubject.next(isAuthenticated);
+
+    if (isAuthenticated) {
+      const role = this.headerService.get_role(); // Assuming you have a method to get the role from the token
+      this.isAdminSubject.next(role === Role.ADMIN);
+    } else {
+      this.isAdminSubject.next(false);
+    }
+  }
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
     return this.http
@@ -54,8 +73,10 @@ export class AuthenticationService {
           this.log(response);
           this.tokenService.set_token(response.access_token);
           this.headerService.set_header_role(response.role);
-        }),
-        catchError((error) => this.handleError(error, null))
+
+          this.isAuthenticatedSubject.next(true);
+          this.isAdminSubject.next(response.role === Role.ADMIN);
+        })
       );
   }
 
