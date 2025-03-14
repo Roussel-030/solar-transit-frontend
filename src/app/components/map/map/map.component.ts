@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import { ListingRequest } from "../../../types/Listing";
 import { environment } from "../../../../environments/environment";
@@ -10,7 +10,7 @@ import { ListingsService } from "../../../services/listings/listings.service";
   templateUrl: "./map.component.html",
   styleUrl: "./map.component.css",
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private googleTileLayer!: L.TileLayer;
@@ -21,6 +21,9 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
     this.initMap();
     this.getListing();
+  }
+
+  ngAfterViewInit(): void {
     this.updateMarkers(this.listings);
   }
 
@@ -33,7 +36,7 @@ export class MapComponent implements OnInit {
         Number(listing.longitude),
       ])
         .addTo(this.map)
-        .bindPopup(``);
+        .bindPopup(this.getPopupContent(listing));
       this.markers.push(marker);
     });
   }
@@ -58,5 +61,22 @@ export class MapComponent implements OnInit {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
       attribution: "&copy; Google Maps",
     }).addTo(this.map);
+  }
+
+  private getPopupContent(listing: ListingRequest): string {
+    return `
+      <div class="relative bg-white rounded-lg shadow-md overflow-hidden hover:cursor-pointer">
+        <img
+          class="absolute inset-0 w-full h-full object-cover"
+          src="${this.listingServices.getImage(listing.image_name)}"
+          alt="Listing Image"
+        />
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative p-6 h-48 flex flex-col justify-end">
+          <p class="text-lg font-semibold text-white">${listing.name}</p>
+          <p class="text-sm text-gray-200">${listing.address}</p>
+        </div>
+      </div>
+    `;
   }
 }
