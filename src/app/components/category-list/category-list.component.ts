@@ -8,7 +8,7 @@ import { CategoryFormComponent } from "../category-form/category-form.component"
   selector: "app-category-list",
   imports: [CategoryFormComponent],
   templateUrl: "./category-list.component.html",
-  styleUrl: "./category-list.component.css",
+  styleUrl: "./category-list.component.css"
 })
 export class CategoryListComponent implements OnInit {
   categoryList: CategoryRequest[] = [];
@@ -18,6 +18,10 @@ export class CategoryListComponent implements OnInit {
   categoryService = inject(CategoryService);
 
   ngOnInit(): void {
+    this.getCategory();
+  }
+
+  getCategory() {
     this.categoryService
       .readCategory()
       .subscribe((categoryList) => (this.categoryList = categoryList.data));
@@ -30,20 +34,22 @@ export class CategoryListComponent implements OnInit {
     if (title) {
       this.titleModal = title;
     }
-
     this.isPopupVisible = true;
   }
 
-  closeModalCategory() {
+  closeModalCategory(isFetch: boolean = false) {
     this.isPopupVisible = false;
     this.init();
+    if (isFetch) this.getCategory();
   }
 
   deleteCategory(categoryRequest: CategoryRequest) {
     if (categoryRequest.id) {
-      this.categoryService
-        .deleteCategory(categoryRequest.id)
-        .subscribe(() => console.log("Success"));
+      this.categoryService.deleteCategory(categoryRequest.id).subscribe({
+        complete: () => {
+          this.getCategory();
+        }
+      });
     }
   }
 
