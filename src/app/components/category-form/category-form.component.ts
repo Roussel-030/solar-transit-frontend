@@ -1,7 +1,6 @@
 import { CategoryRequest } from "./../../types/Category";
-import { Component, inject, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
-import { menuNames } from "../../util/menuNames";
+import { Component, EventEmitter, inject, Input, Output } from "@angular/core";
+
 import { FormsModule } from "@angular/forms";
 import { CategoryService } from "../../services/category/category.service";
 
@@ -11,44 +10,25 @@ import { CategoryService } from "../../services/category/category.service";
   templateUrl: "./category-form.component.html",
   styleUrl: "./category-form.component.css",
 })
-export class CategoryFormComponent implements OnInit {
-  isAddForm: boolean = false;
-  router = inject(Router);
-  route = inject(ActivatedRoute);
+export class CategoryFormComponent {
+  @Output() closeModalCategory = new EventEmitter<void>();
+  @Input() titleModal?: string = "";
+  @Input() categoryRequest: CategoryRequest = { name: "" };
   categoryService = inject(CategoryService);
-  categoryRequest: CategoryRequest = { name: "" };
 
-  ngOnInit(): void {
-    this.isAddForm = this.router.url.includes("add");
-    if (!this.isAddForm) {
-      this.getCategoryById();
-    }
-  }
-
-  goToCategory() {
-    this.router.navigate([menuNames.category.path]);
-  }
-
-  getCategoryById() {
-    const categoryId: number | null = Number(
-      this.route.snapshot.paramMap.get("id")
-    );
-    if (categoryId) {
-      this.categoryService
-        .getByIdCategory(categoryId)
-        .subscribe((category) => (this.categoryRequest = category));
-    }
+  closeModal() {
+    this.closeModalCategory.emit();
   }
 
   onSubmit() {
-    if (this.isAddForm) {
+    if (this.titleModal && this.titleModal.includes("Add")) {
       this.categoryService
         .createCategory(this.categoryRequest)
-        .subscribe(() => this.goToCategory());
+        .subscribe(() => this.closeModal());
     } else {
       this.categoryService
         .updateCategory(this.categoryRequest)
-        .subscribe(() => this.goToCategory());
+        .subscribe(() => this.closeModal());
     }
   }
 }

@@ -1,3 +1,11 @@
+@if(isPopupVisible) {
+<app-category-form
+  (closeModalCategory)="closeModalCategory()"
+  [categoryRequest]="category"
+  [titleModal]="titleModal"
+></app-category-form>
+}
+
 <div class="mx-auto max-w-screen-lg px-4 py-8 sm:px-8">
   <div class="flex items-center justify-between pb-6">
     <div>
@@ -6,7 +14,7 @@
     </div>
     <div>
       <button
-        (click)="goToAddCategory()"
+        (click)="openModalCategory('Add category')"
         class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
       >
         Add
@@ -41,13 +49,12 @@
             </td>
             <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
               <button
-                (click)="goToEditCategory(category)"
                 class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
+                (click)="openModalCategory('Update category', category)"
               >
                 Update
               </button>
               <button
-                (click)="deleteCategory(category)"
                 class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
               >
                 Delete
