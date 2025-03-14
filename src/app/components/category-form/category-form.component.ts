@@ -8,27 +8,28 @@ import { CategoryService } from "../../services/category/category.service";
   selector: "app-category-form",
   imports: [FormsModule],
   templateUrl: "./category-form.component.html",
-  styleUrl: "./category-form.component.css",
+  styleUrl: "./category-form.component.css"
 })
 export class CategoryFormComponent {
-  @Output() closeModalCategory = new EventEmitter<void>();
+  @Output() closeModalCategory = new EventEmitter<any>();
   @Input() titleModal?: string = "";
   @Input() categoryRequest: CategoryRequest = { name: "" };
   categoryService = inject(CategoryService);
 
   closeModal() {
-    this.closeModalCategory.emit();
+    this.closeModalCategory.emit(false);
   }
 
   onSubmit() {
     if (this.titleModal && this.titleModal.includes("Add")) {
       this.categoryService
         .createCategory(this.categoryRequest)
-        .subscribe(() => this.closeModal());
+        .subscribe(() => this.closeModalCategory.emit(true));
     } else {
-      this.categoryService
-        .updateCategory(this.categoryRequest)
-        .subscribe(() => this.closeModal());
+      if (this.categoryRequest.id)
+        this.categoryService
+          .updateCategory(this.categoryRequest, this.categoryRequest.id)
+          .subscribe(() => this.closeModalCategory.emit(true));
     }
   }
 }
