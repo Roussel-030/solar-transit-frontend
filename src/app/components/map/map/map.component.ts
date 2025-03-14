@@ -3,37 +3,66 @@ import * as L from "leaflet";
 import { ListingRequest } from "../../../types/Listing";
 import { environment } from "../../../../environments/environment";
 import { ListingsService } from "../../../services/listings/listings.service";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { CategoryRequest } from "../../../types/Category";
+import { CategoryService } from "../../../services/category/category.service";
 
 @Component({
   selector: "app-map",
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: "./map.component.html",
-  styleUrl: "./map.component.css",
+  styleUrl: "./map.component.css"
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private googleTileLayer!: L.TileLayer;
+  // Sample data for listings
   listings: ListingRequest[] = [];
+  categories: CategoryRequest[] = [];
+
+  // Filtered listings based on search and category
+  filteredListings = this.listings;
+
+  // Search query and selected category
+  searchQuery = "";
+  selectedCategory: number = 0;
   listingServices = inject(ListingsService);
+  categoryService = inject(CategoryService);
   readonly httpMapLayer = "";
 
   ngOnInit(): void {
     this.initMap();
     this.getListing();
+    this.getCategory();
   }
 
   ngAfterViewInit(): void {
     this.updateMarkers(this.listings);
   }
 
+  // Function to apply search and category filters
+  applyFilters() {
+    this.listingServices
+      .searchListings(this.searchQuery, +this.selectedCategory)
+      .subscribe({
+        next: (data) => {
+          this.filteredListings = data.data;
+          this.updateMarkers(this.filteredListings);
+        },
+
+        error: () => {},
+        complete: () => {}
+      });
+  }
   private updateMarkers(listingRequest: ListingRequest[]): void {
     this.markers.forEach((marker) => this.map.removeLayer(marker));
     this.markers = [];
     listingRequest.forEach((listing) => {
       const marker = L.marker([
         Number(listing.latitude),
-        Number(listing.longitude),
+        Number(listing.longitude)
       ])
         .addTo(this.map)
         .bindPopup(this.getPopupContent(listing));
@@ -48,10 +77,21 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateMarkers(this.listings);
       },
 
-      error: () => {},
+      error: () => {}
       // complete: () => {
       //   this.applyFilters();
       // }
+    });
+  }
+
+  getCategory() {
+    this.categoryService.readCategory().subscribe({
+      next: (data) => {
+        this.categories = data.data;
+      },
+
+      error: () => {},
+      complete: () => {}
     });
   }
 
@@ -64,13 +104,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       iconUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
       shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
     });
     this.map = L.map("map").setView([48.8566, 2.3522], 3);
 
     this.googleTileLayer = L.tileLayer(environment.httpMapLayer, {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      attribution: "&copy; Google Maps",
+      attribution: "&copy; Google Maps"
     }).addTo(this.map);
   }
 
