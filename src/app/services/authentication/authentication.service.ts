@@ -12,7 +12,7 @@ import { HeaderService } from "../header/header.service";
 const API_URL = environment.apiUrl;
 
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class AuthenticationService {
   constructor(private tokenService: TokenService) {}
@@ -78,11 +78,6 @@ export class AuthenticationService {
           this.isAdminSubject.next(response.role === Role.ADMIN);
         })
       );
-  }
-
-  logout() {
-    this.tokenService.set_token("");
-    window.location.reload();
   }
 
   private log(response: any) {
