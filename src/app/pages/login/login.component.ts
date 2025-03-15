@@ -2,24 +2,26 @@ import { Component, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { menuNames } from "../../util/menuNames";
 import { AuthenticationService } from "../../services/authentication/authentication.service";
-import { LoginRequest, LoginResponse } from "../../types/Login";
+import { LoginRequest } from "../../types/Login";
 import { FormsModule } from "@angular/forms";
+import { LoadingIndicatorComponent } from "../../components/loading-indicator/loading-indicator.component";
 
 @Component({
   selector: "app-login",
-  imports: [FormsModule],
+  imports: [FormsModule, LoadingIndicatorComponent],
   templateUrl: "./login.component.html",
   styleUrl: "./login.component.css",
 })
 export class LoginComponent {
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
+  isSending: boolean = false;
   loginRequest: LoginRequest = { username: "", password: "" };
 
   onSubmitLogin() {
+    this.isSending = true;
     this.authenticationService.login(this.loginRequest).subscribe({
-      next: (res: LoginResponse) => {
-        console.log(res);
+      next: () => {
         this.router.navigate([menuNames.home.path]);
       },
       error: (err) => {

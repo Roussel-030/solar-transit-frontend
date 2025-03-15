@@ -5,16 +5,18 @@ import { menuNames } from "../../util/menuNames";
 import { RegisterRequest } from "../../types/Register";
 import { Role } from "../../types/Role";
 import { FormsModule } from "@angular/forms";
+import { LoadingIndicatorComponent } from "../../components/loading-indicator/loading-indicator.component";
 
 @Component({
   selector: "app-register",
-  imports: [FormsModule],
+  imports: [FormsModule, LoadingIndicatorComponent],
   templateUrl: "./register.component.html",
   styleUrl: "./register.component.css",
 })
 export class RegisterComponent {
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
+  isSending: boolean = false;
   registerRequest: RegisterRequest = {
     username: "",
     password: "",
@@ -22,9 +24,9 @@ export class RegisterComponent {
   };
 
   onSubmitRegister() {
+    this.isSending = true;
     this.authenticationService.register(this.registerRequest).subscribe({
-      next: (data) => {
-        console.log(data);
+      next: () => {
         this.goToLogin();
       },
       error: (err) => {

@@ -93,9 +93,11 @@
           <button
             [disabled]="!registerForm.form.valid"
             type="submit"
-            class="w-full py-3 px-6 text-sm tracking-wider font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white focus:outline-none"
+            class="w-full flex items-center justify-center py-3 px-6 text-sm tracking-wider font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white focus:outline-none"
           >
-            Creat an account
+            @if(!isSending) { Creat an account } @else {
+            <app-loading-indicator />
+            }
           </button>
           <p class="text-sm mt-6 text-gray-800">
             Already have an account?
