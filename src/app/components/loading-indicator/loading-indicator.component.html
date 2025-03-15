@@ -1,0 +1,8 @@
+<div class="loading-container">
+  <div
+    class="dot"
+    *ngFor="let dot of dots; let i = index"
+    [style.background-color]="color"
+    [style.animationDelay]="i * delay + 's'"
+  ></div>
+</div>

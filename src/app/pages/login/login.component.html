@@ -93,9 +93,11 @@
           <button
             [disabled]="!loginForm.form.valid"
             type="submit"
-            class="w-full shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
+            class="w-full flex items-center justify-center shadow-xl py-2.5 px-5 text-sm font-semibold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none"
           >
-            Sign in
+            @if(!isSending) { Sign in } @else {
+            <app-loading-indicator />
+            }
           </button>
           <p class="text-gray-800 text-sm text-center mt-6">
             Don't have an account
