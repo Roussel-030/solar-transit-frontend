@@ -4,10 +4,16 @@
   [categoryRequest]="category"
   [titleModal]="titleModal"
 ></app-category-form>
+} @if(isModalDelete) {
+<app-modal-delete
+  (closeModalDelete)="closeModalDelete()"
+  (deleteEntity)="deleteCategory($event)"
+  [valueDeleteModal]="valueDeleteModal"
+></app-modal-delete>
 }
 
 <div
-  class="text-slate-700 max-w-screen-xl flex-col overflow-hidden px-4 py-4 md:mx-auto md:flex-row md:items-center px-4 py-8 sm:px-8"
+  class="text-slate-700 max-w-screen-xl flex-col overflow-hidden md:mx-auto md:flex-row md:items-center px-4 py-8 sm:px-8"
 >
   <div class="flex items-center justify-between pb-6">
     <div>
@@ -50,7 +56,7 @@
               </div>
             </td>
             <td
-              class="border-b border-gray-200 bg-white px-5 py-5 text-sm flex justify-end items-center"
+              class="border-b border-gray-200 bg-white px-5 py-5 text-sm flex justify-start items-center"
             >
               <!-- Pencil Icon for Edit -->
               <button
@@ -76,7 +82,7 @@
               <!-- Trash Icon for Delete -->
               <button
                 class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2"
-                (click)="deleteCategory(category)"
+                (click)="openModalDelete(category)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
