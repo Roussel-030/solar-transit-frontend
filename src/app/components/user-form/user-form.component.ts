@@ -49,4 +49,8 @@ export class UserFormComponent implements OnInit {
       });
     }
   }
+
+  closeMOdal() {
+    this.onCancel.emit(false);
+  }
 }
