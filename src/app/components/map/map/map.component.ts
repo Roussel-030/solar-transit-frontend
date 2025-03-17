@@ -143,7 +143,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (listing.id) {
       this.listingServices.updateListing(listing, listing.id).subscribe({
         complete: () => {
-          console.log("success drag and drop");
+          this.getListing();
         },
       });
     }
