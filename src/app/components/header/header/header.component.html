@@ -53,12 +53,11 @@
           <a [routerLink]="menus.user.path">Users</a>
         </li>
         <li class="md:mr-12">
-          <a [routerLink]="menus.listing.path">Listings</a>
-        </li>
-        <li class="md:mr-12">
           <a [routerLink]="menus.category.path" *ngIf="isAdmin">Category</a>
         </li>
-        <li class="md:mr-12"><a [routerLink]="menus.map.path">Map</a></li>
+        <li class="md:mr-12">
+          <a [routerLink]="menus.map.path" *ngIf="isAdmin">Map</a>
+        </li>
         <li class="md:mr-12">
           <button
             class="rounded-full border-2 border-cyan-500 px-6 py-1 text-cyan-600 transition-colors hover:bg-cyan-500 hover:text-white"

@@ -1,10 +1,10 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { ListingListComponent } from "../../components/listing-list/listing-list.component";
+import { MapComponent } from "../../components/map/map/map.component";
 
 @Component({
   selector: "app-home",
-  imports: [FormsModule, ListingListComponent],
+  imports: [FormsModule, MapComponent],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.css",
 })
