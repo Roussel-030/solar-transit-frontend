@@ -1,3 +1,12 @@
+@if(isModalDelete) {
+<app-modal-delete
+  class="z-50"
+  (closeModalDelete)="closeModalDelete()"
+  (deleteEntity)="deleteListing($event)"
+  [valueDeleteModal]="valueDeleteModal"
+></app-modal-delete>
+}
+
 <!-- Modal -->
 <div
   *ngIf="isModalOpen"

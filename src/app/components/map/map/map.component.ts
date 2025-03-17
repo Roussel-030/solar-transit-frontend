@@ -8,10 +8,17 @@ import { FormsModule } from "@angular/forms";
 import { CategoryRequest } from "../../../types/Category";
 import { CategoryService } from "../../../services/category/category.service";
 import { ListingFormComponent } from "../../listing-form/listing-form.component";
+import { Delete_Modal_Type } from "../../../types/Delete_Modal";
+import { ModalDeleteComponent } from "../../modal-delete/modal-delete.component";
 
 @Component({
   selector: "app-map",
-  imports: [CommonModule, FormsModule, ListingFormComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ListingFormComponent,
+    ModalDeleteComponent,
+  ],
   templateUrl: "./map.component.html",
   styleUrl: "./map.component.css",
 })
@@ -37,6 +44,14 @@ export class MapComponent implements OnInit, AfterViewInit {
   //Modal
   isModalOpen: boolean = false;
   isEditing: boolean = false;
+  isModalDelete: boolean = false;
+  valueDeleteModal: Delete_Modal_Type = {
+    title: "Deleting listing",
+    content: "Are you sure you want to delete the listing ",
+    valueBtnAccepted: "Yes, delete the listing",
+    valueBtnCancelled: "Cancel, keep the listing",
+    entityToDelete: null,
+  };
 
   ngOnInit(): void {
     this.initMap();
@@ -63,9 +78,18 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
   }
 
+  openModalDelete(listingRequest: ListingRequest) {
+    this.valueDeleteModal.entityToDelete = listingRequest;
+    this.isModalDelete = true;
+  }
+
   closeModal(isFetch: boolean = false) {
     this.isModalOpen = false;
     if (isFetch) this.getListing();
+  }
+
+  closeModalDelete() {
+    this.isModalDelete = false;
   }
 
   addListing() {
@@ -92,6 +116,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       //   this.applyFilters();
       // }
     });
+  }
+
+  deleteListing(listing: unknown) {
+    if (this.isListingRequest(listing) && listing.id) {
+      this.listingServices.deleteListing(listing.id).subscribe({
+        complete: () => {
+          this.getListing();
+          this.closeModalDelete();
+        },
+      });
+    }
   }
 
   getCategory() {
@@ -141,12 +176,31 @@ export class MapComponent implements OnInit, AfterViewInit {
       marker.on("popupopen", () => {
         setTimeout(() => {
           const updateButton = document.getElementById(`update-${listing.id}`);
+          const deleteButton = document.getElementById(`delete-${listing.id}`);
           if (updateButton) {
             updateButton.addEventListener("click", () => this.onEdit(listing));
+          }
+          if (deleteButton) {
+            deleteButton.addEventListener("click", () =>
+              this.openModalDelete(listing)
+            );
           }
         }, 100);
       });
     });
+  }
+
+  private isListingRequest(obj: unknown): obj is ListingRequest {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      "name" in obj &&
+      "address" in obj &&
+      "description" in obj &&
+      "category_id" in obj &&
+      "latitude" in obj &&
+      "longitude" in obj
+    );
   }
 
   private getPopupContent(listing: ListingRequest): string {
@@ -163,9 +217,38 @@ export class MapComponent implements OnInit, AfterViewInit {
           Address: <span class="text-gray-600">${listing.address}</span>
         </p>
       </div>
-      <div class="flex flex-col space-y-2">
-        <button id="update-${listing.id}" class="flex items-center justify-center px-5 py-2 bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition duration-300">
-          Action
+      <div class="flex justify-center space-x-4">
+        <button id="update-${listing.id}" class="rounded-full p-3 bg-blue-600 text-white">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                  />
+                </svg>
+        </button>
+        <button id="delete-${listing.id}" class="rounded-full p-3 bg-gray-500 text-white">
+               <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
         </button>
       </div>
     </div>`;

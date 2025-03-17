@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Delete_Modal_Type } from "../../types/Delete_Modal";
 import { CategoryRequest } from "../../types/Category";
 import { RegisterRequest } from "../../types/Register";
+import { ListingRequest } from "../../types/Listing";
 
 @Component({
   selector: "app-modal-delete",
@@ -13,7 +14,7 @@ export class ModalDeleteComponent {
   @Input() valueDeleteModal: Delete_Modal_Type | null = null;
   @Output() closeModalDelete = new EventEmitter();
   @Output() deleteEntity = new EventEmitter<
-    CategoryRequest | RegisterRequest
+    CategoryRequest | RegisterRequest | ListingRequest
   >();
 
   closeModal() {
