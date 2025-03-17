@@ -139,6 +139,16 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+  updateListingForDragAndDrop(listing: ListingRequest) {
+    if (listing.id) {
+      this.listingServices.updateListing(listing, listing.id).subscribe({
+        complete: () => {
+          console.log("success drag and drop");
+        },
+      });
+    }
+  }
+
   deleteListing(listing: unknown) {
     if (this.isListingRequest(listing) && listing.id) {
       this.listingServices.deleteListing(listing.id).subscribe({
@@ -186,14 +196,23 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.markers = [];
 
     listingRequest.forEach((listing) => {
-      const marker = L.marker([
-        Number(listing.latitude),
-        Number(listing.longitude),
-      ])
+      const marker = L.marker(
+        [Number(listing.latitude), Number(listing.longitude)],
+        {
+          draggable: true,
+        }
+      )
         .addTo(this.map)
         .bindPopup(this.getPopupContent(listing));
 
       this.markers.push(marker);
+
+      marker.on("moveend", (e) => {
+        const newPosition = e.target.getLatLng();
+        listing.latitude = newPosition.lat;
+        listing.longitude = newPosition.lng;
+        this.updateListingForDragAndDrop(listing);
+      });
 
       marker.on("popupopen", () => {
         setTimeout(() => {
