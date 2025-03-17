@@ -133,6 +133,20 @@
             </option>
           </select>
         </div>
+
+        <!-- Filter user list -->
+        <div class="relative">
+          <select
+            class="border rounded-md p-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            [(ngModel)]="selectedUser"
+            (change)="applyFilters()"
+          >
+            <option value="0">All Users</option>
+            <option *ngFor="let user of users" [value]="user.id">
+              {{ user.username }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
