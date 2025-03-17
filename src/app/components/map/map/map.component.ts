@@ -72,7 +72,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.users = data.data;
         // Assign a unique color to each user
-        this.assignUserColors();
+        this.assignUserColors(data.data);
       },
       error: () => {},
       complete: () => {}
@@ -80,7 +80,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   // Assign a unique color to each user
-  assignUserColors() {
+  assignUserColors(data: RegisterRequest[]) {
     const colors = [
       "red",
       "blue",
@@ -93,7 +93,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       "magenta",
       "lime"
     ];
-    this.users.forEach((user, index) => {
+    data.forEach((user, index) => {
       if (user.id) this.userColors[user.id] = colors[index % colors.length];
     });
   }
@@ -208,9 +208,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.markers = [];
 
     listingRequest.forEach((listing) => {
-      if (listing.created_by) {
-      }
-      const userColor = this.userColors[listing.created_by] || "blue"; // Default to blue if no color is found
+      const userColor = this.userColors[listing.created_by] || "yellow"; // Default to blue if no color is found
       const customIcon = this.getCustomIcon(userColor);
 
       const marker = L.marker(
@@ -275,7 +273,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private getPopupContent(listing: ListingRequest): string {
     return `
-    <div class="px-6">
+    <div class="p-3">
       <div class="text-sm text-gray-700 space-y-1">
         <p class="font-medium text-gray-950">
           Latitude: <span class="text-gray-600">${listing.latitude}</span>
