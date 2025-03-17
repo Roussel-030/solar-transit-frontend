@@ -129,6 +129,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.listingServices.getListing().subscribe({
       next: (data) => {
         this.listings = data.data;
+        this.filteredListings = this.listings;
         this.updateMarkers(this.listings);
       },
 
