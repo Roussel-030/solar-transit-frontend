@@ -149,7 +149,10 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.filteredListings = this.listings;
         this.updateMarkers(this.listings);
       },
-      error: () => {}
+      error: () => {},
+      complete: () => {
+        this.applyFilters();
+      }
     });
   }
 
