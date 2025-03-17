@@ -160,6 +160,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateMarkers(this.listings);
       },
       error: () => {},
+      complete: () => {
+        this.applyFilters();
+      }
     });
   }
 
