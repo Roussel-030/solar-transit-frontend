@@ -31,6 +31,7 @@ export class ListingFormComponent implements OnInit {
         latitude: "",
         longitude: "",
         category_id: 0,
+        created_by: 0,
         image_name: ""
       };
     }

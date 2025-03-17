@@ -7,6 +7,7 @@ export type ListingRequest = {
   latitude: string;
   longitude: string;
   image_name?: any;
+  created_by: number;
 };
 
 export type ListingImageRequest = {

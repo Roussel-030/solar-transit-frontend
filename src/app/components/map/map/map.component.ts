@@ -29,15 +29,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   private markers: L.Marker[] = [];
   users: RegisterRequest[] = [];
   private googleTileLayer!: L.TileLayer;
-  // Sample data for listings
   listings: ListingRequest[] = [];
   categories: CategoryRequest[] = [];
   selectedListing!: ListingRequest;
-
-  // Filtered listings based on search and category
   filteredListings = this.listings;
-
-  // Search query and selected category
   searchQuery = "";
   selectedCategory: number = 0;
   selectedUser: number = 0;
@@ -46,7 +41,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   userService = inject(UserService);
   readonly httpMapLayer = "";
 
-  //Modal
+  // Modal
   isModalOpen: boolean = false;
   isEditing: boolean = false;
   isModalDelete: boolean = false;
@@ -57,6 +52,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     valueBtnCancelled: "Cancel, keep the listing",
     entityToDelete: null
   };
+
+  // User colors mapping
+  userColors: { [key: number]: string } = {};
 
   ngOnInit(): void {
     this.initMap();
@@ -73,10 +71,30 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.userService.getUsers().subscribe({
       next: (data) => {
         this.users = data.data;
+        // Assign a unique color to each user
+        this.assignUserColors();
       },
-
       error: () => {},
       complete: () => {}
+    });
+  }
+
+  // Assign a unique color to each user
+  assignUserColors() {
+    const colors = [
+      "red",
+      "blue",
+      "green",
+      "orange",
+      "purple",
+      "yellow",
+      "pink",
+      "cyan",
+      "magenta",
+      "lime"
+    ];
+    this.users.forEach((user, index) => {
+      if (user.id) this.userColors[user.id] = colors[index % colors.length];
     });
   }
 
@@ -93,7 +111,6 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.filteredListings = data.data;
           this.updateMarkers(this.filteredListings);
         },
-
         error: () => {},
         complete: () => {}
       });
@@ -132,11 +149,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.filteredListings = this.listings;
         this.updateMarkers(this.listings);
       },
-
       error: () => {}
-      // complete: () => {
-      //   this.applyFilters();
-      // }
     });
   }
 
@@ -160,14 +173,12 @@ export class MapComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  applyUserFilter() {}
 
   getCategory() {
     this.categoryService.readCategory().subscribe({
       next: (data) => {
         this.categories = data.data;
       },
-
       error: () => {},
       complete: () => {}
     });
@@ -197,10 +208,16 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.markers = [];
 
     listingRequest.forEach((listing) => {
+      if (listing.created_by) {
+      }
+      const userColor = this.userColors[listing.created_by] || "blue"; // Default to blue if no color is found
+      const customIcon = this.getCustomIcon(userColor);
+
       const marker = L.marker(
         [Number(listing.latitude), Number(listing.longitude)],
         {
-          draggable: true
+          draggable: true,
+          icon: customIcon
         }
       )
         .addTo(this.map)
@@ -229,6 +246,17 @@ export class MapComponent implements OnInit, AfterViewInit {
           }
         }, 100);
       });
+    });
+  }
+
+  private getCustomIcon(color: string): L.Icon {
+    return L.icon({
+      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
+      shadowUrl:
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+      iconSize: [25, 41], // Size of the icon
+      iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
+      popupAnchor: [1, -34] // Point from which the popup should open relative to the iconAnchor
     });
   }
 
