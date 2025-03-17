@@ -6,12 +6,14 @@ import { ListingRequest } from "../../types/Listing";
 import { CategoryRequest } from "../../types/Category";
 import { CategoryService } from "../../services/category/category.service";
 import { ListingFormComponent } from "../listing-form/listing-form.component";
+import { RegisterRequest } from "../../types/Register";
+import { UserService } from "../../services/users/user.service";
 
 @Component({
   selector: "app-listing-list",
   imports: [FormsModule, CommonModule, ListingFormComponent],
   templateUrl: "./listing-list.component.html",
-  styleUrl: "./listing-list.component.css"
+  styleUrl: "./listing-list.component.css",
 })
 export class ListingListComponent {
   // Sample data for listings
@@ -33,7 +35,8 @@ export class ListingListComponent {
 
   constructor(
     public listingServices: ListingsService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +53,7 @@ export class ListingListComponent {
       error: () => {},
       complete: () => {
         this.applyFilters();
-      }
+      },
     });
   }
 
@@ -61,7 +64,7 @@ export class ListingListComponent {
       },
 
       error: () => {},
-      complete: () => {}
+      complete: () => {},
     });
   }
 
@@ -75,7 +78,7 @@ export class ListingListComponent {
         },
 
         error: () => {},
-        complete: () => {}
+        complete: () => {},
       });
   }
 

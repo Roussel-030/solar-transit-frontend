@@ -8,6 +8,8 @@ import { FormsModule } from "@angular/forms";
 import { CategoryRequest } from "../../../types/Category";
 import { CategoryService } from "../../../services/category/category.service";
 import { ListingFormComponent } from "../../listing-form/listing-form.component";
+import { RegisterRequest } from "../../../types/Register";
+import { UserService } from "../../../services/users/user.service";
 
 @Component({
   selector: "app-map",
@@ -18,6 +20,7 @@ import { ListingFormComponent } from "../../listing-form/listing-form.component"
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
   private markers: L.Marker[] = [];
+  users: RegisterRequest[] = [];
   private googleTileLayer!: L.TileLayer;
   // Sample data for listings
   listings: ListingRequest[] = [];
@@ -30,8 +33,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   // Search query and selected category
   searchQuery = "";
   selectedCategory: number = 0;
+  selectedUser: number = 0;
   listingServices = inject(ListingsService);
   categoryService = inject(CategoryService);
+  userService = inject(UserService);
   readonly httpMapLayer = "";
 
   //Modal
@@ -42,16 +47,32 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.initMap();
     this.getListing();
     this.getCategory();
+    this.getUsers();
   }
 
   ngAfterViewInit(): void {
     this.updateMarkers(this.listings);
   }
 
+  getUsers() {
+    this.userService.getUsers().subscribe({
+      next: (data) => {
+        this.users = data.data;
+      },
+
+      error: () => {},
+      complete: () => {},
+    });
+  }
+
   // Function to apply search and category filters
   applyFilters() {
     this.listingServices
-      .searchListings(this.searchQuery, +this.selectedCategory)
+      .searchListings(
+        this.searchQuery,
+        +this.selectedCategory,
+        +this.selectedUser
+      )
       .subscribe({
         next: (data) => {
           this.filteredListings = data.data;
@@ -93,6 +114,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       // }
     });
   }
+
+  applyUserFilter() {}
 
   getCategory() {
     this.categoryService.readCategory().subscribe({

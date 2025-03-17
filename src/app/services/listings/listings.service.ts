@@ -6,12 +6,12 @@ import { Observable, tap, catchError, of } from "rxjs";
 import {
   ListingImageRequest,
   ListingRequest,
-  ListingResponse
+  ListingResponse,
 } from "../../types/Listing";
 
 const API_URL = environment.apiUrl;
 @Injectable({
-  providedIn: "root"
+  providedIn: "root",
 })
 export class ListingsService {
   private http = inject(HttpClient);
@@ -100,11 +100,13 @@ export class ListingsService {
 
   searchListings(
     name: string = "",
-    categoryId: number = 0
+    categoryId: number = 0,
+    userId: number = 0
   ): Observable<ListingResponse> {
     let params = new HttpParams()
       .append("name", name)
-      .append("category_id", categoryId);
+      .append("category_id", categoryId)
+      .append("user_id", userId);
     return this.http
       .get<ListingResponse>(
         this.listingUrl + "search",
