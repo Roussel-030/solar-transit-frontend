@@ -19,10 +19,10 @@ import { UserService } from "../../../services/users/user.service";
     CommonModule,
     FormsModule,
     ListingFormComponent,
-    ModalDeleteComponent,
+    ModalDeleteComponent
   ],
   templateUrl: "./map.component.html",
-  styleUrl: "./map.component.css",
+  styleUrl: "./map.component.css"
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
@@ -55,7 +55,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     content: "Are you sure you want to delete the listing ",
     valueBtnAccepted: "Yes, delete the listing",
     valueBtnCancelled: "Cancel, keep the listing",
-    entityToDelete: null,
+    entityToDelete: null
   };
 
   ngOnInit(): void {
@@ -76,7 +76,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       },
 
       error: () => {},
-      complete: () => {},
+      complete: () => {}
     });
   }
 
@@ -95,7 +95,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
 
         error: () => {},
-        complete: () => {},
+        complete: () => {}
       });
   }
 
@@ -132,7 +132,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateMarkers(this.listings);
       },
 
-      error: () => {},
+      error: () => {}
       // complete: () => {
       //   this.applyFilters();
       // }
@@ -144,7 +144,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.listingServices.updateListing(listing, listing.id).subscribe({
         complete: () => {
           this.getListing();
-        },
+        }
       });
     }
   }
@@ -155,7 +155,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         complete: () => {
           this.getListing();
           this.closeModalDelete();
-        },
+        }
       });
     }
   }
@@ -168,7 +168,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       },
 
       error: () => {},
-      complete: () => {},
+      complete: () => {}
     });
   }
 
@@ -181,13 +181,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       iconUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
       shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
     });
     this.map = L.map("map").setView([48.8566, 2.3522], 3);
 
     this.googleTileLayer = L.tileLayer(environment.httpMapLayer, {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      attribution: "&copy; Google Maps",
+      attribution: "&copy; Google Maps"
     }).addTo(this.map);
   }
 
@@ -199,7 +199,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       const marker = L.marker(
         [Number(listing.latitude), Number(listing.longitude)],
         {
-          draggable: true,
+          draggable: true
         }
       )
         .addTo(this.map)
@@ -259,37 +259,37 @@ export class MapComponent implements OnInit, AfterViewInit {
         </p>
       </div>
       <div class="flex justify-center space-x-4">
-        <button id="update-${listing.id}" class="rounded-full p-3 bg-blue-600 text-white">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                  />
-                </svg>
+        <button id="update-${listing.id}" class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2 hover:bg-gray-100">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
+          </svg>
         </button>
-        <button id="delete-${listing.id}" class="rounded-full p-3 bg-gray-500 text-white">
-               <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+        <button id="delete-${listing.id}" class="mr-2 border rounded-md text-sm font-semibold text-gray-600 p-2 hover:bg-gray-100">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
         </button>
       </div>
     </div>`;
