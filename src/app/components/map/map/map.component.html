@@ -71,27 +71,79 @@
     <div class="w-full">
       <button
         (click)="addListing()"
-        class="mr-2 border-0 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium text-white px-4 py-2 transition-colors duration-200 shadow-sm"
+        class="w-full bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-semibold text-white py-2 px-4 transition duration-200"
       >
-        + Add
+        + Add Listing
       </button>
-      <h2 class="font-semibold text-gray-800 text-center mt-3 text-lg">
-        List listings
+      <h2 class="font-semibold text-gray-700 text-center mt-4">
+        List Listings
       </h2>
     </div>
-    <div class="w-full">
-      @if(listings.length === 0) {
-      <span class="text-sm text-gray-500 block text-center py-3 italic"
-        >... Nothing listings available ....</span
+    <div class="w-full mt-4">
+      @if (filteredListings.length === 0) {
+      <span class="text-sm text-gray-500">... No listings available ...</span>
+      } @else { @for (listing of filteredListings; track listing.id) {
+      <div
+        class="p-4 mb-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition duration-200"
       >
-      } @else { @for(listing of listings; track listing.id) {
-      <ul class="divide-y divide-gray-100">
-        <li class="py-2 px-1 hover:bg-gray-50 rounded flex items-center">
-          <span class="font-medium text-gray-700">{{ listing.id }}</span>
-          <span class="mx-2 text-gray-400">-</span>
-          <span class="text-gray-800">{{ listing.name }}</span>
-        </li>
-      </ul>
+        <div class="flex justify-between items-start">
+          <!-- Listing Details -->
+          <div class="flex-1">
+            <h3 class="text-lg font-semibold text-gray-800">
+              {{ listing.name }}
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">{{ listing.description }}</p>
+            <p class="text-sm text-gray-600 mt-1">{{ listing.address }}</p>
+            <p class="text-xs text-gray-500 mt-1">
+              Latitude: {{ listing.latitude }}, Longitude:
+              {{ listing.longitude }}
+            </p>
+          </div>
+
+          <!-- Edit and Delete Buttons -->
+          <!-- <div class="flex space-x-2">
+            <button
+              class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition duration-200"
+              (click)="onEdit(listing)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                />
+              </svg>
+            </button>
+
+            <button
+              class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-red-50 hover:text-red-600 transition duration-200"
+              (click)="openModalDelete(listing)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div> -->
+        </div>
+      </div>
       } }
     </div>
   </div>
