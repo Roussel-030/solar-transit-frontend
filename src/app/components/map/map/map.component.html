@@ -62,37 +62,44 @@
   </div>
 </div>
 
-<div class="flex md:flex-row flex-col space-x-3 space-y-3 px-3 w-full">
+<div class="flex md:flex-row flex-col space-x-3 space-y-3 px-6 w-full">
   <!-- Header Section -->
-  <div class="flex flex-col space-y-2 border p-2 rounded-md md:w-1/4">
+
+  <div
+    class="flex flex-col mt-3 space-y-4 border border-gray-200 p-4 rounded-lg shadow-sm md:w-1/4 bg-white"
+  >
     <div class="w-full">
       <button
         (click)="addListing()"
-        class="mr-2 border bg-gray-500 hover:bg-gray-600 rounded-md text-sm font-semibold text-white p-2"
+        class="mr-2 border-0 bg-blue-600 hover:bg-blue-700 rounded-md text-sm font-medium text-white px-4 py-2 transition-colors duration-200 shadow-sm"
       >
-        +Add
+        + Add
       </button>
-      <h2 class="font-semibold text-gray-700 text-center mt-2">
+      <h2 class="font-semibold text-gray-800 text-center mt-3 text-lg">
         List listings
       </h2>
     </div>
     <div class="w-full">
       @if(listings.length === 0) {
-      <span class="text-sm text-gray-500"
+      <span class="text-sm text-gray-500 block text-center py-3 italic"
         >... Nothing listings available ....</span
       >
       } @else { @for(listing of listings; track listing.id) {
-      <ul>
-        <li>{{ listing.id }} - {{ listing.name }}</li>
+      <ul class="divide-y divide-gray-100">
+        <li class="py-2 px-1 hover:bg-gray-50 rounded flex items-center">
+          <span class="font-medium text-gray-700">{{ listing.id }}</span>
+          <span class="mx-2 text-gray-400">-</span>
+          <span class="text-gray-800">{{ listing.name }}</span>
+        </li>
       </ul>
       } }
     </div>
   </div>
 
-  <div class="md:w-3/4 z-20">
+  <div class="md:w-3/4 w-full z-20">
     <!-- Search and Filter Section -->
-    <div class="mb-6 flex items-center justify-between">
-      <div class="flex items-center space-x-4">
+    <div class="mb-6">
+      <div class="flex md:flex-row flex-col md:items-center gap-2">
         <!-- Search Bar -->
         <div class="relative">
           <input

@@ -246,7 +246,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private getPopupContent(listing: ListingRequest): string {
     return `
-    <div class="p-3">
+    <div class="px-6">
       <div class="text-sm text-gray-700 space-y-1">
         <p class="font-medium text-gray-950">
           Latitude: <span class="text-gray-600">${listing.latitude}</span>
