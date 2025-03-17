@@ -7,12 +7,13 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { CategoryRequest } from "../../../types/Category";
 import { CategoryService } from "../../../services/category/category.service";
+import { ListingFormComponent } from "../../listing-form/listing-form.component";
 
 @Component({
   selector: "app-map",
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ListingFormComponent],
   templateUrl: "./map.component.html",
-  styleUrl: "./map.component.css"
+  styleUrl: "./map.component.css",
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
@@ -21,6 +22,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   // Sample data for listings
   listings: ListingRequest[] = [];
   categories: CategoryRequest[] = [];
+  selectedListing!: ListingRequest;
 
   // Filtered listings based on search and category
   filteredListings = this.listings;
@@ -31,6 +33,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   listingServices = inject(ListingsService);
   categoryService = inject(CategoryService);
   readonly httpMapLayer = "";
+
+  //Modal
+  isModalOpen: boolean = false;
+  isEditing: boolean = false;
 
   ngOnInit(): void {
     this.initMap();
@@ -53,21 +59,25 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
 
         error: () => {},
-        complete: () => {}
+        complete: () => {},
       });
   }
-  private updateMarkers(listingRequest: ListingRequest[]): void {
-    this.markers.forEach((marker) => this.map.removeLayer(marker));
-    this.markers = [];
-    listingRequest.forEach((listing) => {
-      const marker = L.marker([
-        Number(listing.latitude),
-        Number(listing.longitude)
-      ])
-        .addTo(this.map)
-        .bindPopup(this.getPopupContent(listing));
-      this.markers.push(marker);
-    });
+
+  closeModal(isFetch: boolean = false) {
+    this.isModalOpen = false;
+    if (isFetch) this.getListing();
+  }
+
+  addListing() {
+    this.isModalOpen = true;
+    this.isEditing = false;
+    this.selectedListing;
+  }
+
+  onEdit(listing: ListingRequest) {
+    this.selectedListing = listing;
+    this.isModalOpen = true;
+    this.isEditing = true;
   }
 
   getListing() {
@@ -77,7 +87,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateMarkers(this.listings);
       },
 
-      error: () => {}
+      error: () => {},
       // complete: () => {
       //   this.applyFilters();
       // }
@@ -91,7 +101,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       },
 
       error: () => {},
-      complete: () => {}
+      complete: () => {},
     });
   }
 
@@ -104,33 +114,60 @@ export class MapComponent implements OnInit, AfterViewInit {
       iconUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
       shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     });
     this.map = L.map("map").setView([48.8566, 2.3522], 3);
 
     this.googleTileLayer = L.tileLayer(environment.httpMapLayer, {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      attribution: "&copy; Google Maps"
+      attribution: "&copy; Google Maps",
     }).addTo(this.map);
+  }
+
+  private updateMarkers(listingRequest: ListingRequest[]): void {
+    this.markers.forEach((marker) => this.map.removeLayer(marker));
+    this.markers = [];
+
+    listingRequest.forEach((listing) => {
+      const marker = L.marker([
+        Number(listing.latitude),
+        Number(listing.longitude),
+      ])
+        .addTo(this.map)
+        .bindPopup(this.getPopupContent(listing));
+
+      this.markers.push(marker);
+
+      marker.on("popupopen", () => {
+        setTimeout(() => {
+          const updateButton = document.getElementById(`update-${listing.id}`);
+          if (updateButton) {
+            updateButton.addEventListener("click", () => this.onEdit(listing));
+          }
+        }, 100);
+      });
+    });
   }
 
   private getPopupContent(listing: ListingRequest): string {
     return `
-      <div class="relative bg-white rounded-lg shadow-md overflow-hidden hover:cursor-pointer">
-        <img
-          class="absolute inset-0 w-full h-full object-cover"
-          src="${this.listingServices.getImage(listing.image_name)}"
-          alt="Listing Image"
-        />
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div class="relative p-6 h-48 flex flex-col justify-end">
-          <p class="text-lg font-semibold text-white">${listing.name}</p>
-          <p class="text-sm text-gray-200">${listing.address}</p>
-          <p class="text-sm text-gray-300 leading-5 line-clamp-3">${
-            listing.description
-          }</p>
-        </div>
+    <div class="p-3">
+      <div class="text-sm text-gray-700 space-y-1">
+        <p class="font-medium text-gray-950">
+          Latitude: <span class="text-gray-600">${listing.latitude}</span>
+        </p>
+        <p class="font-medium text-gray-900">
+          Longitude: <span class="text-gray-600">${listing.longitude}</span>
+        </p>
+        <p class="font-medium text-gray-900">
+          Address: <span class="text-gray-600">${listing.address}</span>
+        </p>
       </div>
-    `;
+      <div class="flex flex-col space-y-2">
+        <button id="update-${listing.id}" class="flex items-center justify-center px-5 py-2 bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition duration-300">
+          Action
+        </button>
+      </div>
+    </div>`;
   }
 }

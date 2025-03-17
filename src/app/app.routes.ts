@@ -48,15 +48,10 @@ export const routes: Routes = [
     component: UserProfileComponent,
     canActivate: [AuthGuard],
   },
-  {
-    path: menuNames.listing.path,
-    title: menuNames.listing.name,
-    component: ListingListComponent,
-    canActivate: [AuthGuard],
-  },
+
   {
     path: menuNames.map.path,
-    title: menuNames.listing.name,
+    title: menuNames.map.name,
     component: MapComponent,
     canActivate: [AuthGuard],
   },

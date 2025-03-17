@@ -15,10 +15,6 @@ export const menuNames = {
     name: "Users",
     path: "user",
   },
-  listing: {
-    name: "Listings",
-    path: "listing",
-  },
   category: {
     name: "Category",
     path: "category",
