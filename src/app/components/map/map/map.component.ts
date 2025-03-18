@@ -15,7 +15,8 @@ import { ModalDeleteComponent } from "../../modal-delete/modal-delete.component"
 import { RegisterRequest } from "../../../types/Register";
 import { UserService } from "../../../services/users/user.service";
 import { AuthenticationService } from "../../../services/authentication/authentication.service";
-import { LoaderComponent } from "../../loader/loader/loader.component";
+
+import { LoaderService } from "../../../services/loader/loader.service";
 
 @Component({
   selector: "app-map",
@@ -24,7 +25,6 @@ import { LoaderComponent } from "../../loader/loader/loader.component";
     FormsModule,
     ListingFormComponent,
     ModalDeleteComponent,
-    LoaderComponent,
   ],
   templateUrl: "./map.component.html",
   styleUrl: "./map.component.css",
@@ -46,6 +46,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   userService = inject(UserService);
   authService = inject(AuthenticationService);
   geoLocationService = inject(GeolocationService);
+  loaderService = inject(LoaderService);
   readonly httpMapLayer = "";
   isAdmin: boolean = false;
 
@@ -151,7 +152,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   async addListing() {
-    this.isLoading = true;
+    this.loaderService.show();
     try {
       const locationInfo = await this.getUserGeolocation();
       this.geolocation = locationInfo;
@@ -161,7 +162,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     } catch (error) {
       console.error(error);
     } finally {
-      this.isLoading = false;
+      this.loaderService.hide();
     }
   }
 

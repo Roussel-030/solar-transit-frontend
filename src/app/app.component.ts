@@ -5,10 +5,11 @@ import { CommonModule } from "@angular/common";
 import { HeaderComponent } from "./components/header/header/header.component";
 import { ToastComponent } from "./components/toast/toast.component";
 import { ToastService } from "./services/toast/toast.service";
+import { LoaderComponent } from "./components/loader/loader/loader.component";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, HeaderComponent, CommonModule, ToastComponent],
+  imports: [RouterOutlet, HeaderComponent, CommonModule, ToastComponent, LoaderComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.css"
 })
