@@ -24,10 +24,10 @@ import { WebSocketService } from "../../../services/toast/socket.service";
     CommonModule,
     FormsModule,
     ListingFormComponent,
-    ModalDeleteComponent,
+    ModalDeleteComponent
   ],
   templateUrl: "./map.component.html",
-  styleUrl: "./map.component.css",
+  styleUrl: "./map.component.css"
 })
 export class MapComponent implements OnInit, AfterViewInit {
   private map!: L.Map;
@@ -60,7 +60,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     content: "Are you sure you want to delete the listing ",
     valueBtnAccepted: "Yes, delete the listing",
     valueBtnCancelled: "Cancel, keep the listing",
-    entityToDelete: null,
+    entityToDelete: null
   };
 
   // User colors mapping
@@ -78,13 +78,12 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.getListing();
     this.getCategory();
     this.getUsers();
+    const client_id = Date.now();
+    this.socketService.openWebsocketConnection(client_id);
 
-    this.socketService
-      .getListingUpdates()
-      .subscribe((newListing: ListingRequest) => {
-        this.listings.push(newListing);
-        this.updateMarkers(this.listings);
-      });
+    this.socketService.getListingUpdates().subscribe((message) => {
+      this.getListing();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -99,7 +98,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.assignUserColors(data.data);
       },
       error: () => {},
-      complete: () => {},
+      complete: () => {}
     });
   }
 
@@ -120,7 +119,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       "gold",
       "violet",
       "grey",
-      "black",
+      "black"
     ];
     data.forEach((user, index) => {
       if (user.id) this.userColors[user.id] = colors[index % colors.length];
@@ -141,7 +140,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           this.updateMarkers(this.filteredListings);
         },
         error: () => {},
-        complete: () => {},
+        complete: () => {}
       });
   }
 
@@ -190,7 +189,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       error: () => {},
       complete: () => {
         this.applyFilters();
-      },
+      }
     });
   }
 
@@ -199,7 +198,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.listingServices.updateListing(listing, listing.id).subscribe({
         complete: () => {
           this.getListing();
-        },
+        }
       });
     }
   }
@@ -210,7 +209,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         complete: () => {
           this.getListing();
           this.closeModalDelete();
-        },
+        }
       });
     }
   }
@@ -225,7 +224,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           return {
             latitude: 0,
             longitude: 0,
-            address: "Unknown",
+            address: "Unknown"
           } as LocationInfo;
         }
       })
@@ -234,7 +233,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         return {
           latitude: 0,
           longitude: 0,
-          address: "Error fetching location",
+          address: "Error fetching location"
         } as LocationInfo;
       });
   }
@@ -245,7 +244,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.categories = data.data;
       },
       error: () => {},
-      complete: () => {},
+      complete: () => {}
     });
   }
 
@@ -258,13 +257,13 @@ export class MapComponent implements OnInit, AfterViewInit {
       iconUrl:
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
       shadowUrl:
-        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+        "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png"
     });
     this.map = L.map("map").setView([48.8566, 2.3522], 3);
 
     this.googleTileLayer = L.tileLayer(environment.httpMapLayer, {
       subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      attribution: "&copy; Google Maps",
+      attribution: "&copy; Google Maps"
     }).addTo(this.map);
   }
 
@@ -280,7 +279,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         [Number(listing.latitude), Number(listing.longitude)],
         {
           draggable: true,
-          icon: customIcon,
+          icon: customIcon
         }
       )
         .addTo(this.map)
@@ -319,7 +318,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
       iconSize: [25, 41], // Size of the icon
       iconAnchor: [12, 41], // Point of the icon which will correspond to marker's location
-      popupAnchor: [1, -34], // Point from which the popup should open relative to the iconAnchor
+      popupAnchor: [1, -34] // Point from which the popup should open relative to the iconAnchor
     });
   }
 

@@ -5,6 +5,7 @@ import { AuthenticationService } from "../../services/authentication/authenticat
 import { LoginRequest } from "../../types/Login";
 import { FormsModule } from "@angular/forms";
 import { LoadingIndicatorComponent } from "../../components/loading-indicator/loading-indicator.component";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-login",
@@ -20,14 +21,17 @@ export class LoginComponent {
 
   onSubmitLogin() {
     this.isSending = true;
-    this.authenticationService.login(this.loginRequest).subscribe({
-      next: () => {
-        this.router.navigate([menuNames.home.path]);
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    this.authenticationService
+      .login(this.loginRequest)
+      .pipe(finalize(() => (this.isSending = false)))
+      .subscribe({
+        next: () => {
+          this.router.navigate([menuNames.home.path]);
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   goToRegister() {

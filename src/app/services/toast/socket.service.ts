@@ -1,22 +1,74 @@
 import { Injectable } from "@angular/core";
-import { webSocket, WebSocketSubject } from "rxjs/webSocket";
 import { environment } from "../../../environments/environment";
+import { Observable } from "rxjs";
 
-const SOCEKT_URL = environment.apiUrl;
+const SOCKET_URL = environment.socketUrl;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: "root"
 })
 export class WebSocketService {
-  private socket$: WebSocketSubject<any>;
+  private webSocket!: WebSocket;
+  private shouldReconnect: boolean = true;
+  private reconnectInterval: number = 5000; // 5 seconds
+  private newNotification: boolean = false;
+  private nbrNotification: number = 0;
 
-  constructor() {
-    // Connect to the WebSocket endpoint
-    this.socket$ = webSocket(`${SOCEKT_URL}/ws/listings`);
+  constructor() {}
+
+  // Method to open a WebSocket connection
+  openWebsocketConnection(id?: number) {
+    this.webSocket = new WebSocket(`${SOCKET_URL}/socket/ws/${id}`);
+
+    this.webSocket.onopen = (e) => {
+      console.log("WebSocket connection opened", e);
+    };
+
+    this.webSocket.onmessage = (e) => {
+      let message = JSON.parse(e.data);
+      if (message?.status === "refresh") {
+        // Call a service to refresh the menu or perform other actions
+        // this.homeService.refreshMenu();
+      } else {
+        this.newNotification = true;
+        this.nbrNotification += 1;
+        this.createBasicNotification("bottomRight", JSON.parse(e.data));
+      }
+    };
+
+    this.webSocket.onclose = (e) => {
+      console.log("WebSocket connection closed", e);
+      if (this.shouldReconnect) {
+        setTimeout(() => {
+          this.openWebsocketConnection(id);
+        }, this.reconnectInterval);
+      }
+    };
+
+    this.webSocket.onerror = (e) => {
+      console.error("WebSocket error", e);
+      this.webSocket.close();
+    };
   }
 
-  // Method to listen for incoming messages
+  // Method to close the WebSocket connection
+  closeWebsocketConnection() {
+    this.shouldReconnect = false;
+    this.webSocket.close();
+  }
+
+  // Method to create a basic notification (you can implement this as needed)
+  private createBasicNotification(position: string, data: any) {
+    // Implement your notification logic here
+    console.log("New notification:", data);
+  }
+
+  // Method to listen for incoming messages (optional, if needed)
   public getListingUpdates() {
-    return this.socket$.asObservable();
+    return new Observable((observer) => {
+      this.webSocket.onmessage = (e) => {
+        observer.next(e.data);
+      };
+    });
   }
 }

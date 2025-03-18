@@ -6,6 +6,7 @@ import { RegisterRequest } from "../../types/Register";
 import { Role } from "../../types/Role";
 import { FormsModule } from "@angular/forms";
 import { LoadingIndicatorComponent } from "../../components/loading-indicator/loading-indicator.component";
+import { finalize } from "rxjs";
 
 @Component({
   selector: "app-register",
@@ -25,14 +26,17 @@ export class RegisterComponent {
 
   onSubmitRegister() {
     this.isSending = true;
-    this.authenticationService.register(this.registerRequest).subscribe({
-      next: () => {
-        this.goToLogin();
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    this.authenticationService
+      .register(this.registerRequest)
+      .pipe(finalize(() => (this.isSending = false)))
+      .subscribe({
+        next: () => {
+          this.goToLogin();
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
   }
 
   goToLogin() {
