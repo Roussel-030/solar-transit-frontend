@@ -1,3 +1,5 @@
+import { LocationInfo } from "./../../../types/geolocation";
+import { GeolocationService } from "./../../../services/geolocation/geolocation.service";
 import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import { ListingRequest } from "../../../types/Listing";
@@ -13,6 +15,8 @@ import { ModalDeleteComponent } from "../../modal-delete/modal-delete.component"
 import { RegisterRequest } from "../../../types/Register";
 import { UserService } from "../../../services/users/user.service";
 import { AuthenticationService } from "../../../services/authentication/authentication.service";
+import { LoaderService } from "../../../services/loader/loader.service";
+import { WebSocketService } from "../../../services/toast/socket.service";
 
 @Component({
   selector: "app-map",
@@ -41,6 +45,9 @@ export class MapComponent implements OnInit, AfterViewInit {
   categoryService = inject(CategoryService);
   userService = inject(UserService);
   authService = inject(AuthenticationService);
+  geoLocationService = inject(GeolocationService);
+  loaderService = inject(LoaderService);
+  socketService = inject(WebSocketService);
   readonly httpMapLayer = "";
   isAdmin: boolean = false;
 
@@ -59,12 +66,25 @@ export class MapComponent implements OnInit, AfterViewInit {
   // User colors mapping
   userColors: { [key: number]: string } = {};
 
+  //geolocation
+  geolocation: LocationInfo = { latitude: 0, longitude: 0, address: "" };
+
+  //loading
+  isLoading: boolean = false;
+
   ngOnInit(): void {
     this.verifyUserIsAdmin();
     this.initMap();
     this.getListing();
     this.getCategory();
     this.getUsers();
+
+    this.socketService
+      .getListingUpdates()
+      .subscribe((newListing: ListingRequest) => {
+        this.listings.push(newListing);
+        this.updateMarkers(this.listings);
+      });
   }
 
   ngAfterViewInit(): void {
@@ -96,12 +116,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       "blue",
       "green",
       "orange",
-      "purple",
       "yellow",
-      "pink",
-      "cyan",
-      "magenta",
-      "lime",
+      "gold",
+      "violet",
+      "grey",
+      "black",
     ];
     data.forEach((user, index) => {
       if (user.id) this.userColors[user.id] = colors[index % colors.length];
@@ -140,10 +159,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.isModalDelete = false;
   }
 
-  addListing() {
-    this.isModalOpen = true;
-    this.isEditing = false;
-    this.selectedListing;
+  async addListing() {
+    this.loaderService.show();
+    try {
+      const locationInfo = await this.getUserGeolocation();
+      this.geolocation = locationInfo;
+      this.isModalOpen = true;
+      this.isEditing = false;
+      this.selectedListing;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.loaderService.hide();
+    }
   }
 
   onEdit(listing: ListingRequest) {
@@ -162,7 +190,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       error: () => {},
       complete: () => {
         this.applyFilters();
-      }
+      },
     });
   }
 
@@ -185,6 +213,30 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
       });
     }
+  }
+
+  getUserGeolocation() {
+    return this.geoLocationService
+      .getLocationAndAddress()
+      .then((locationInfo) => {
+        if (locationInfo) {
+          return locationInfo;
+        } else {
+          return {
+            latitude: 0,
+            longitude: 0,
+            address: "Unknown",
+          } as LocationInfo;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return {
+          latitude: 0,
+          longitude: 0,
+          address: "Error fetching location",
+        } as LocationInfo;
+      });
   }
 
   getCategory() {
@@ -271,6 +323,20 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openPopupForListing(listing: ListingRequest) {
+    const marker = this.markers.find((m) => {
+      const latLng = m.getLatLng();
+      return (
+        latLng.lat === Number(listing.latitude) &&
+        latLng.lng === Number(listing.longitude)
+      );
+    });
+
+    if (marker) {
+      marker.openPopup();
+    }
+  }
+
   private isListingRequest(obj: unknown): obj is ListingRequest {
     return (
       typeof obj === "object" &&
@@ -284,7 +350,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private getPopupContent(listing: ListingRequest): string {
+  getPopupContent(listing: ListingRequest): string {
     return `
     <div class="p-3">
       <div class="text-sm text-gray-700 space-y-1">

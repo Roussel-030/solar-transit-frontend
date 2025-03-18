@@ -4,18 +4,24 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ListingRequest } from "../../types/Listing";
 import { ListingsService } from "../../services/listings/listings.service";
+import { LocationInfo } from "../../types/geolocation";
 
 @Component({
   selector: "app-listing-form",
   imports: [FormsModule, CommonModule],
   templateUrl: "./listing-form.component.html",
-  styleUrl: "./listing-form.component.css"
+  styleUrl: "./listing-form.component.css",
 })
 export class ListingFormComponent implements OnInit {
   constructor(private listingService: ListingsService) {}
   @Input() listening!: ListingRequest;
   @Input() categories: CategoryRequest[] = [];
   @Input() editing: boolean = false;
+  @Input() geolocation: LocationInfo = {
+    latitude: 0,
+    longitude: 0,
+    address: "",
+  };
   @Output() onCancel = new EventEmitter<any>();
   selectedCategory: number = 0;
 
@@ -24,16 +30,7 @@ export class ListingFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.listening || !this.editing) {
-      this.listening = {
-        name: "",
-        description: "",
-        address: "",
-        latitude: "",
-        longitude: "",
-        category_id: 0,
-        created_by: 0,
-        image_name: ""
-      };
+      this.initListing();
     }
   }
 
@@ -67,7 +64,7 @@ export class ListingFormComponent implements OnInit {
               error: () => {},
               complete: () => {
                 this.onCancel.emit(true);
-              }
+              },
             });
           else if (this.listening.id)
             this.listingService
@@ -75,13 +72,13 @@ export class ListingFormComponent implements OnInit {
               .subscribe({
                 complete: () => {
                   this.onCancel.emit(true);
-                }
+                },
               });
         },
         error: (error) => {
           console.error("Error uploading image:", error);
           alert("Error uploading image. Please try again.");
-        }
+        },
       });
     } else {
       if (!this.editing)
@@ -93,7 +90,7 @@ export class ListingFormComponent implements OnInit {
           error: () => {},
           complete: () => {
             this.onCancel.emit(true);
-          }
+          },
         });
       else if (this.listening.id)
         this.listingService
@@ -101,7 +98,7 @@ export class ListingFormComponent implements OnInit {
           .subscribe({
             complete: () => {
               this.onCancel.emit(true);
-            }
+            },
           });
     }
   }
@@ -111,7 +108,20 @@ export class ListingFormComponent implements OnInit {
       this.listingService.deleteListing(this.listening.id).subscribe({
         complete: () => {
           this.onCancel.emit(true);
-        }
+        },
       });
+  }
+
+  initListing() {
+    this.listening = {
+      name: "",
+      description: "",
+      address: this.geolocation.address,
+      latitude: this.geolocation.latitude.toString(),
+      longitude: this.geolocation.longitude.toString(),
+      category_id: 0,
+      created_by: 0,
+      image_name: "",
+    };
   }
 }

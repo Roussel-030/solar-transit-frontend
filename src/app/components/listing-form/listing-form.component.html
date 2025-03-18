@@ -10,7 +10,7 @@
       </div>
     </div>
   </div>
-  <form class="py-10 px-8" (ngSubmit)="onSubmit()">
+  <form class="py-10 px-8" (ngSubmit)="onSubmit()" #listingForm="ngForm">
     <!-- Name and Category on the same row -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div>
@@ -23,8 +23,15 @@
           required=""
           [(ngModel)]="listening.name"
           name="name"
+          #nameInput="ngModel"
         />
         <span class="my-2 block"></span>
+        <span
+          *ngIf="nameInput.invalid && nameInput.touched"
+          class="text-red-500 text-sm"
+        >
+          Name is required.
+        </span>
       </div>
       <div>
         <label class="mb-2 block text-sm font-bold" for="category"
@@ -35,11 +42,18 @@
           [(ngModel)]="listening.category_id"
           id="category"
           name="category"
+          #categoryInput="ngModel"
         >
           <option *ngFor="let category of categories" [value]="category.id">
             {{ category.name }}
           </option>
         </select>
+        <span
+          *ngIf="categoryInput.invalid && categoryInput.touched"
+          class="text-red-500 text-sm"
+        >
+          Category is required.
+        </span>
       </div>
     </div>
 
@@ -57,6 +71,7 @@
           required=""
           [(ngModel)]="listening.latitude"
           name="latitude"
+          readonly
         />
         <span class="my-2 block"></span>
       </div>
@@ -72,6 +87,7 @@
           required=""
           [(ngModel)]="listening.longitude"
           name="longitude"
+          readonly
         />
         <span class="my-2 block"></span>
       </div>
@@ -103,6 +119,7 @@
           required=""
           [(ngModel)]="listening.address"
           name="address"
+          readonly
         />
         <!-- SVG Icon for Image Upload -->
         <label for="image-upload" class="ml-2 cursor-pointer">
@@ -147,6 +164,7 @@
         Cancel
       </button>
       <button
+        [disabled]="!listingForm.form.valid"
         class="cursor-pointer rounded bg-blue-600 py-2 px-8 text-center text-lg font-bold text-white"
         type="submit"
       >
