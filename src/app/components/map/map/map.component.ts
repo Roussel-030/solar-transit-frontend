@@ -96,12 +96,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       "blue",
       "green",
       "orange",
-      "purple",
       "yellow",
-      "pink",
-      "cyan",
-      "magenta",
-      "lime",
+      "gold",
+      "violet",
+      "grey",
+      "black",
     ];
     data.forEach((user, index) => {
       if (user.id) this.userColors[user.id] = colors[index % colors.length];
@@ -162,7 +161,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       error: () => {},
       complete: () => {
         this.applyFilters();
-      }
+      },
     });
   }
 
