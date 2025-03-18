@@ -15,6 +15,7 @@ import { ModalDeleteComponent } from "../../modal-delete/modal-delete.component"
 import { RegisterRequest } from "../../../types/Register";
 import { UserService } from "../../../services/users/user.service";
 import { AuthenticationService } from "../../../services/authentication/authentication.service";
+import { LoaderComponent } from "../../loader/loader/loader.component";
 
 @Component({
   selector: "app-map",
@@ -23,6 +24,7 @@ import { AuthenticationService } from "../../../services/authentication/authenti
     FormsModule,
     ListingFormComponent,
     ModalDeleteComponent,
+    LoaderComponent,
   ],
   templateUrl: "./map.component.html",
   styleUrl: "./map.component.css",
