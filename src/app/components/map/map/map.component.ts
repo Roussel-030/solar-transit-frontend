@@ -1,3 +1,5 @@
+import { LocationInfo } from "./../../../types/geolocation";
+import { GeolocationService } from "./../../../services/geolocation/geolocation.service";
 import { AfterViewInit, Component, inject, OnInit } from "@angular/core";
 import * as L from "leaflet";
 import { ListingRequest } from "../../../types/Listing";
@@ -41,6 +43,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   categoryService = inject(CategoryService);
   userService = inject(UserService);
   authService = inject(AuthenticationService);
+  geoLocationService = inject(GeolocationService);
   readonly httpMapLayer = "";
   isAdmin: boolean = false;
 
@@ -58,6 +61,12 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   // User colors mapping
   userColors: { [key: number]: string } = {};
+
+  //geolocation
+  geolocation: LocationInfo = { latitude: 0, longitude: 0, address: "" };
+
+  //loading
+  isLoading: boolean = false;
 
   ngOnInit(): void {
     this.verifyUserIsAdmin();
@@ -139,10 +148,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.isModalDelete = false;
   }
 
-  addListing() {
-    this.isModalOpen = true;
-    this.isEditing = false;
-    this.selectedListing;
+  async addListing() {
+    this.isLoading = true;
+    try {
+      const locationInfo = await this.getUserGeolocation();
+      this.geolocation = locationInfo;
+      this.isModalOpen = true;
+      this.isEditing = false;
+      this.selectedListing;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   onEdit(listing: ListingRequest) {
@@ -184,6 +202,30 @@ export class MapComponent implements OnInit, AfterViewInit {
         },
       });
     }
+  }
+
+  getUserGeolocation() {
+    return this.geoLocationService
+      .getLocationAndAddress()
+      .then((locationInfo) => {
+        if (locationInfo) {
+          return locationInfo;
+        } else {
+          return {
+            latitude: 0,
+            longitude: 0,
+            address: "Unknown",
+          } as LocationInfo;
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        return {
+          latitude: 0,
+          longitude: 0,
+          address: "Error fetching location",
+        } as LocationInfo;
+      });
   }
 
   getCategory() {

@@ -57,6 +57,7 @@
           required=""
           [(ngModel)]="listening.latitude"
           name="latitude"
+          [readOnly]="!editing"
         />
         <span class="my-2 block"></span>
       </div>
@@ -72,6 +73,7 @@
           required=""
           [(ngModel)]="listening.longitude"
           name="longitude"
+          [readOnly]="!editing"
         />
         <span class="my-2 block"></span>
       </div>
