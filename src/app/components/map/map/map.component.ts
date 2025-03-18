@@ -15,6 +15,7 @@ import { ModalDeleteComponent } from "../../modal-delete/modal-delete.component"
 import { RegisterRequest } from "../../../types/Register";
 import { UserService } from "../../../services/users/user.service";
 import { AuthenticationService } from "../../../services/authentication/authentication.service";
+import { WebSocketService } from "../../../services/toast/socket.service";
 
 @Component({
   selector: "app-map",
@@ -44,6 +45,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   userService = inject(UserService);
   authService = inject(AuthenticationService);
   geoLocationService = inject(GeolocationService);
+  socketService = inject(WebSocketService);
   readonly httpMapLayer = "";
   isAdmin: boolean = false;
 
@@ -74,6 +76,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.getListing();
     this.getCategory();
     this.getUsers();
+
+    this.socketService
+      .getListingUpdates()
+      .subscribe((newListing: ListingRequest) => {
+        this.listings.push(newListing);
+        this.updateMarkers(this.listings);
+      });
   }
 
   ngAfterViewInit(): void {
