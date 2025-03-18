@@ -270,6 +270,20 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+  openPopupForListing(listing: ListingRequest) {
+    const marker = this.markers.find((m) => {
+      const latLng = m.getLatLng();
+      return (
+        latLng.lat === Number(listing.latitude) &&
+        latLng.lng === Number(listing.longitude)
+      );
+    });
+
+    if (marker) {
+      marker.openPopup();
+    }
+  }
+
   private isListingRequest(obj: unknown): obj is ListingRequest {
     return (
       typeof obj === "object" &&
@@ -283,7 +297,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     );
   }
 
-  private getPopupContent(listing: ListingRequest): string {
+  getPopupContent(listing: ListingRequest): string {
     return `
     <div class="p-3">
       <div class="text-sm text-gray-700 space-y-1">
